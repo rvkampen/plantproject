@@ -1,0 +1,125 @@
+memory:
+each plant (15x):
+- required_value     // minimum value to water
+- pump_time          // amount of time pump might be on
+- available          // set to false if plant is not there
+- max_hose_fill_time // time it takes to pump up trough this hose
+- state // see display part
+- time last watered
+- last value of sensor
+- (last value of second sensor)
+bucket:
+- last low sensor value + last change time
+- last empty sensor value + last change time
+general:
+- start_time
+- first_loop
+- never_watered
+- hygro value(s)
+- temp value(s)
+- last_time
+- fill_state (measure_only / ok / fail_no_water)
+- watered_today // only water once a day
+
+----------------------------------------------
+
+init:
+- first_loop = true
+- never_watered = true
+- watered_today = false
+- reset plant/bucket/general data
+- set start_time
+
+---------------------------------------------
+
+loop:
+- get time from clock
+- clock_fail = time <= last_time || time < start_time
+- if(!clock_fail) last_time = time
+- measure hygro sensor and update sensor values
+- update top display line // see display description below
+
+-- if first loop
+--- fill_state = measure_only
+-- else if (time > 8:15 && !watered_today || never_watered) && !clock fail // so usually 8:30 if scheduling is working
+--- watered_today = true
+--- never_watered = false
+--- fillstate = ok
+--- set cursor on bottom display line
+-- else 
+--- watered_today = time < 8:15
+--- fillstate = measure_only
+
+- measure bucket
+-- select 16
+-- read sensor low
+-- read sensor empty
+-- if empty fillstate = fail_no_water
+-- update display
+
+- foreach plant
+-- select x
+-- measure sensor
+-- if fillstate == ok
+--- if sensor value < required_value && plant state == ok
+---- enable pump
+---- read hose_end_sensor
+---- while !hose_end_sensor sleep .1 sec untill max_hose_fill_time
+---- if still not hose_end_sensor plant state = loose
+---- else wait pump_time
+---- disable pump
+---- measure sensor
+---- if plant level == same level - plant state = fail_sensor
+---- plant x watered = true
+-- update plant state
+-- update display character
+
+---- measure bucket
+----- select 16
+----- read sensor low
+----- read sensor empty
+----- if empty fillstate = fail_no_water
+
+- disable cursor on display
+- update storage
+-- if fail update display
+- post result on telnet
+- post state to server (plants + bucket + hygro + which watered)
+-- if fail update display & retry 5 times (minute in between)
+
+- if first loop 
+-- sleep 5 minutes
+- else
+-- sleep till next half hour mark
+
+----------------------------------
+
+Display
+1234567890123456
+00:00 IS 99% 22C
+W---T----D---  !
+last time loop (FAIL! if clock failed), I if internet fail, S if storage fail, hygro, temp
+Plant state:
+W = watered
+L = loose
+0 = never watered, program started today
+1-9 = number of days since last watered
+* = more than 9 days
+T = watered today + dried out after (thirsty)
+D = Drying (not watered today)
+! = loose for more than a day
+' ' = no plant at this spot
+> = Filling hose
+P = Pumping
+
+Bucket state
+^ = both ok
+W = warning - low but not empty
+F = empty but not low (fail)
+! = low and empty (refill needed)
+
+
+----------------------------
+
+- kill switch? -> measure only for a easy morning?
+- backlight switch?

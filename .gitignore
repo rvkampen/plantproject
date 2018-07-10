@@ -30,3 +30,6 @@
 *.exe
 *.out
 *.app
+arduino/Debug/
+arduino/.vs/
+arduino/__vm/

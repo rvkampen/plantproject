@@ -1,5 +1,3 @@
-// time.h
-
 #ifndef _TIME_h
 #define _TIME_h
 
@@ -21,6 +19,4 @@ const uint16_t & time_day();
 
 uint16_t time_day_diff(uint32_t timestamp);
 
-
 #endif
-

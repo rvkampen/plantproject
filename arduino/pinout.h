@@ -1,5 +1,3 @@
-// pinout.h
-
 #ifndef _PINOUT_h
 #define _PINOUT_h
 
@@ -35,4 +33,3 @@
 void pin_init();
 
 #endif
-

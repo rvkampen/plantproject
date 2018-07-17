@@ -7,10 +7,6 @@ byte mac[] = {	0xDE, 0xAD, 0xBE, 0xEF, 0xFE, 0xED };
 
 EthernetClient client;
 
-// set this to the number of milliseconds delay
-// this is 30 seconds
-#define delayMillis 30000UL
-
 void http_init()
 {
 	// disable SD SPI

@@ -1,28 +1,38 @@
 #include "airsensor.h"
-#include "pinout.h"
 
 #include <Wire.h>
-#include <DHT.h>
+#include <AM2320.h>
 
-// DHT11 5v: one wire -> Arduino Digital 5
-DHT environment_sensor(AIRSENSOR_PIN, DHT11);
+AM2320 blackbox;
 
 String humidity_, temperature_;
 
+int airsensor_count()
+{
+	return 2; // total number of observations
+}
+
+void airsensor_addtoreport(Report & r) {
+
+	r.add(1, 1, temperature_formatted());
+	r.add(1, 2, humidity_formatted());
+}
+
 void airsensor_update() {
-	// Reading temperature or humidity takes about 250 milliseconds!
-	// Sensor readings may also be up to 2 seconds 'old' (its a very slow sensor)
-	float humidity = environment_sensor.readHumidity();
-	float temperature = environment_sensor.readTemperature(false);
 
-	humidity_ = isnan(humidity) ? "--" : String(humidity, 0);
-	temperature_ = isnan(temperature) ? "--" : String(temperature, 0);
-	/*if (!isnan(humidity) && !isnan(temperature))
-	{
-	// Compute heat index in Celsius (isFahreheit = false)
-	// float hic = dht.computeHeatIndex(t, h, false);
-	}*/
 
+	switch (blackbox.Read()) {
+	case 2:
+		humidity_ = temperature_ = F("C!");
+		break;
+	case 1:
+		humidity_ = temperature_ = F("--");
+		break;
+	case 0:
+		humidity_ = String(blackbox.h, 1);
+		temperature_ = String(blackbox.t, 1);
+		break;
+	}
 }
 
 const String & humidity_formatted()

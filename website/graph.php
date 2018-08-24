@@ -4,7 +4,7 @@
 		<title>Graph</title>
 		<style type="text/css">
 			#chart-container {
-				width: 640px;
+				width: 100%;
 				height: auto;
 			}
 		</style>
@@ -16,6 +16,7 @@
 
 		<!-- javascript -->
 		<script type="text/javascript" src="js/jquery.min.js"></script>
+		<script type="text/javascript" src="js/moment.min.js"></script>
 		<script type="text/javascript" src="js/Chart.min.js"></script>
 		<script type="text/javascript" src="js/app.js"></script>
 	</body>

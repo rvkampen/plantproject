@@ -4,16 +4,15 @@ $(document).ready(function(){
 		method: "GET",
 		success: function(data) {
 			console.log(data);
-			var time = [];
-			var temp = [];
+
+			var temperature = [];
 
 			for(var i in data) {
-				time.push(data[i].measurement_time_server);
-				temp.push(data[i].measurement_value);
+				temperature.push({x:new Date(data[i].measurement_time_server), y:data[i].measurement_value});
 			}
 
 			var chartdata = {
-				labels: time,
+				//labels: time,
 				datasets : [
 					{
 						label: 'Temperature',
@@ -21,8 +20,8 @@ $(document).ready(function(){
 						borderColor: 'rgba(200, 200, 200, 0.75)',
 						hoverBackgroundColor: 'rgba(200, 200, 200, 1)',
 						hoverBorderColor: 'rgba(200, 200, 200, 1)',
-                                                fill: false,
-						data: temp
+						fill: false,
+						data: temperature
 					}
 				]
 			};
@@ -32,13 +31,36 @@ $(document).ready(function(){
 			var barGraph = new Chart(ctx, {
 				type: 'line',
 				data: chartdata,
-                                options: {
-                                        responsive: true,
-                                        title: {
-                                                display: true,
-                                                text: 'Environmental'
-                                        }
-                                }
+				options: {
+					responsive: true,
+					title: {
+						display: true,
+						text: 'Environmental'
+					},					
+					scales: {
+						xAxes: [{
+							type: 'time',
+							display: true,
+							scaleLabel: {
+								display: true,
+								labelString: 'Date'
+							},
+							ticks: {
+								major: {
+									fontStyle: 'bold',
+									fontColor: '#FF0000'
+								}
+							}
+						}],
+						yAxes: [{
+							display: true,
+							scaleLabel: {
+								display: true,
+								labelString: 'value'
+							}
+						}]
+					}
+				}
 			});
 		},
 		error: function(data) {
@@ -46,3 +68,7 @@ $(document).ready(function(){
 		}
 	});
 });
+
+
+
+

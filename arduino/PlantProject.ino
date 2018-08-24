@@ -117,7 +117,7 @@ void setup()
 	Serial.begin(115200);
 	Serial.println(F("initializing..."));
 	//time_init();
-	lcd_init();
+	//lcd_init();
 	//pin_init();
 	http_init();
 	Serial.println(F("ready to go!"));
@@ -127,7 +127,7 @@ void loop()
 {
 	//time_update();
 	airsensor_update();
-	lcd_update_top("--:--", humidity_formatted(), temperature_formatted());
+	//lcd_update_top("--:--", humidity_formatted(), temperature_formatted());
 
 	String json = F("data=");
 	{// let our report go out of scope as soon as we have a report ready

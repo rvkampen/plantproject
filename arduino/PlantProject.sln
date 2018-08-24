@@ -5,6 +5,10 @@ VisualStudioVersion = 15.0.27130.2027
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PlantProject", "PlantProject.vcxproj", "{C5F80730-F44F-4478-BDAE-6634EFC2CA89}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "AM2320-master-master", "C:\Users\Richard\Documents\Arduino\libraries\AM2320-master-master\AM2320-master-master.vcxitems", "{61EAFEBD-023A-4CB6-984C-B1F3A298B73E}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ArduinoJson", "C:\Users\Richard\Documents\Arduino\libraries\ArduinoJson\ArduinoJson.vcxitems", "{852C3245-B1F2-4490-A696-12B3938CF32F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x86 = Debug|x86

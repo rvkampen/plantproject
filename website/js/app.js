@@ -1,6 +1,6 @@
 $(document).ready(function(){
 	$.ajax({
-		url: "http://www.plantproject.dx.am/data.php",
+		url: "data.php",
 		method: "GET",
 		success: function(data) {
 			console.log(data);

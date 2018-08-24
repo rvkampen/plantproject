@@ -8,7 +8,7 @@ header('Content-Type: application/json');
 include 'db_config.php';
 
 //query to get data from the table
-$query = "SELECT DATE_FORMAT(measurement_time_server, '%Y-%m-%dT%TZ') as measurement_time_server, measurement_value FROM `measurements` WHERE `measurement_type`=1 AND measurement_time_server> DATE(NOW() - INTERVAL 2 DAY)";
+$query = "SELECT DATE_FORMAT(measurement_time_server, '%Y-%m-%dT%TZ') as measurement_time_server, measurement_value, measurement_type FROM `measurements` WHERE measurement_time_server> DATE(NOW() - INTERVAL 2 DAY)";
 
 //get connection
 $mysqli = new mysqli(DB_HOST, DB_USERNAME, DB_PASSWORD, DB_NAME);

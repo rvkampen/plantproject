@@ -1,13 +1,10 @@
-#ifndef _TIME_h
-#define _TIME_h
+#pragma once 
 
-#if defined(ARDUINO) && ARDUINO >= 100
-	#include "arduino.h"
-#else
-	#include "WProgram.h"
-#endif
+#include "arduino.h"
 
-void time_init();
+void time_init(uint32_t timestamp);
+
+bool set_time(uint32_t timestamp);
 
 void time_update();
 
@@ -18,5 +15,3 @@ const uint32_t & time_unixtimestamp();
 const uint16_t & time_day();
 
 uint16_t time_day_diff(uint32_t timestamp);
-
-#endif

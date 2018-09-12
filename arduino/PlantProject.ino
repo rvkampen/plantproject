@@ -119,7 +119,7 @@ void setup()
 	//time_init();
 	//lcd_init();
 	//pin_init();
-	http_init();
+	network_init();
 	Serial.println(F("ready to go!"));
 }
 

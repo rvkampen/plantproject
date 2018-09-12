@@ -7,7 +7,11 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PlantProject", "PlantProjec
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "AM2320-master-master", "C:\Users\Richard\Documents\Arduino\libraries\AM2320-master-master\AM2320-master-master.vcxitems", "{61EAFEBD-023A-4CB6-984C-B1F3A298B73E}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ArduinoJson", "C:\Users\Richard\Documents\Arduino\libraries\ArduinoJson\ArduinoJson.vcxitems", "{852C3245-B1F2-4490-A696-12B3938CF32F}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ArduinoJson", "C:\Users\Richard\Documents\Arduino\libraries\ArduinoJson\ArduinoJson.vcxitems", "{1EB4E734-1FBE-4725-9D72-3154245C202B}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Test", "Test.vcxproj", "{EBA96706-4D6C-4520-9C13-7DF6864559BA}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DS3231", "C:\Users\Richard\Documents\Arduino\libraries\DS3231\DS3231.vcxitems", "{BDA8F3CA-1BE3-4380-9DF5-E32895E04EE9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -19,6 +23,10 @@ Global
 		{C5F80730-F44F-4478-BDAE-6634EFC2CA89}.Debug|x86.Build.0 = Debug|Win32
 		{C5F80730-F44F-4478-BDAE-6634EFC2CA89}.Release|x86.ActiveCfg = Release|Win32
 		{C5F80730-F44F-4478-BDAE-6634EFC2CA89}.Release|x86.Build.0 = Release|Win32
+		{EBA96706-4D6C-4520-9C13-7DF6864559BA}.Debug|x86.ActiveCfg = Debug|Win32
+		{EBA96706-4D6C-4520-9C13-7DF6864559BA}.Debug|x86.Build.0 = Debug|Win32
+		{EBA96706-4D6C-4520-9C13-7DF6864559BA}.Release|x86.ActiveCfg = Release|Win32
+		{EBA96706-4D6C-4520-9C13-7DF6864559BA}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

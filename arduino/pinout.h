@@ -1,11 +1,6 @@
-#ifndef _PINOUT_h
-#define _PINOUT_h
+#pragma once 
 
-#if defined(ARDUINO) && ARDUINO >= 100
-	#include "arduino.h"
-#else
-	#include "WProgram.h"
-#endif
+#include "arduino.h"
 
 //------------PIN SETUP----------------------
 // analog
@@ -31,5 +26,3 @@
 #define WATERFLOW_PIN 		13
 
 void pin_init();
-
-#endif

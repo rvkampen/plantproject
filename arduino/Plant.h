@@ -1,11 +1,6 @@
-#ifndef _PLANT_h
-#define _PLANT_h
+#pragma once 
 
-#if defined(ARDUINO) && ARDUINO >= 100
 #include "arduino.h"
-#else
-#include "WProgram.h"
-#endif
 
 enum leading_sensor
 {
@@ -42,5 +37,3 @@ private:
 	uint16_t top_sensor_ = 0;
 	uint16_t bottom_sensor_ = 0;
 };
-
-#endif

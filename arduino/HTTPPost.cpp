@@ -1,13 +1,12 @@
 #include "HTTPPost.h"
 
-#include <SPI.h>
 #include <Ethernet.h>
 
-byte mac[] = {	0xDE, 0xAD, 0xBE, 0xEF, 0xFE, 0xED };
+const byte mac[] = { 0xDE, 0xAD, 0xBE, 0xEF, 0xFE, 0xED };
 
 EthernetClient client;
 
-void http_init()
+void network_init()
 {
 	// disable SD SPI
 	pinMode(4, OUTPUT);

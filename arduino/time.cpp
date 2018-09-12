@@ -1,23 +1,18 @@
 #include "time.h"
 #include "pinout.h"
 
-#include <DS1302.h>
+#include <DS3231.h>
 
-// DS1302:  RST pin   -> Arduino Digital 2
-// (3.3v)   DAT pin   -> Arduino Digital 3
-//          CLK pin   -> Arduino Digital 4
-DS1302 clock(CLOCK_RST_PIN, CLOCK_DAT_PIN, CLOCK_CLK_PIN);
+DS3231 clock;
 
-Time starttime_;
-Time time_;
+DateTime starttime_;
+DateTime time_;
 String formatted_;
 uint32_t unixformat_;
 bool time_ok_ = true;
 uint16_t days_ = 0;
 
-#define SECONDS_FROM_1970_TO_2000 946684800
-const uint8_t daysInMonth[] PROGMEM = { 31,28,31,30,31,30,31,31,30,31,30,31 };
-
+/*
 // number of days since 2000/01/01, valid for 2001..2099
 static uint16_t date2days(uint16_t y, uint8_t m, uint8_t d) {
 	if (y >= 2000)
@@ -43,54 +38,97 @@ static uint32_t unixtime(const Time & time) {
 	return t;
 }
 
-Time get_time()
+*/
+DateTime get_time()
 {
-	return clock.getTime();
+	return RTClib::now();
 }
 
-String format_time(Time & t)
+String format_time(DateTime & t)
 {
 	char output[9];
-	output[0] = t.hour<10 ? 48 : char((t.hour / 10) + 48);
-	output[1] = char((t.hour % 10) + 48);
+	output[0] = t.hour()<10 ? 48 : char((t.hour() / 10) + 48);
+	output[1] = char((t.hour() % 10) + 48);
 	output[2] = 58;
-	output[3] = t.min<10 ? 48 : char((t.min / 10) + 48);
-	output[4] = char((t.min % 10) + 48);
+	output[3] = t.minute()<10 ? 48 : char((t.minute() / 10) + 48);
+	output[4] = char((t.minute() % 10) + 48);
 	output[5] = 58;
-	output[6] = t.sec<10 ? 48 : char((t.sec / 10) + 48);
-	output[7] = char((t.sec % 10) + 48);
+	output[6] = t.second()<10 ? 48 : char((t.second() / 10) + 48);
+	output[7] = char((t.second() % 10) + 48);
 	output[8] = 0;
 	return String(&output[0]);
 }
+/*
 
 bool time_before(const Time & t, int hour, int minute)
 {
 	return (t.hour * 60 + t.min) < (hour * 60 + minute);
 }
-
-void time_init()
+*/
+void time_init(uint32_t timestamp)
 {
-	/*
-	rtc.halt(false);
-	rtc.writeProtect(false);
-	rtc.setDOW(WEDNESDAY);
-	rtc.setDate(16, 5, 2018);
-	rtc.setTime(1, 1, 30);
-	rtc.writeProtect(true);//*/
-
+	set_time(timestamp);
 	starttime_ = time_ = get_time();
+}
+
+bool set_time(uint32_t timestamp)
+{
+
+	DateTime d(timestamp);
+
+	Serial.print(F("Setting time to: "));
+	Serial.print(format_time(d));
+	Serial.print(F(" - "));
+	Serial.print(d.year());
+	Serial.print(F("/"));
+	Serial.print(d.month());
+	Serial.print(F("/"));
+	Serial.print(d.day());
+	Serial.print(F(" - day of week = "));
+	Serial.println(d.dayOfTheWeek());
+
+	if (d.year() < 2018)
+		return false;
+
+	Serial.print(F("set1"));
+	clock.setClockMode(false);
+	Serial.print(F("set2"));
+	clock.setYear(d.year() - 2000);
+	Serial.print(F("set3"));
+	clock.setMonth(d.month());
+	clock.setDate(d.day());
+	clock.setDoW(d.dayOfTheWeek());
+	clock.setHour(d.hour());
+	clock.setMinute(d.minute());
+	clock.setSecond(d.second());
+
+	Serial.print(F("Done setting time"));
+
+	return true;
 }
 
 void time_update()
 {
-	Time old = time_;
+	DateTime old = time_;
 	time_ = get_time();
-	time_ok_ = unixtime(old) < unixtime(time_);
+	time_ok_ = old.unixtime() < time_.unixtime();
 	formatted_ = format_time(time_);
-	unixformat_ = unixtime(time_);
-	days_ = date2days(time_.year, time_.mon, time_.date);
-}
+	unixformat_ = time_.unixtime();
+	days_ = date2days(time_.year(), time_.month(), time_.day());
+	Serial.print(F("Time: "));
+	Serial.print(formatted_);
+	Serial.print(F(" - "));
+	Serial.print(time_.year());
+	Serial.print(F("/"));
+	Serial.print(time_.month());
+	Serial.print(F("/"));
+	Serial.print(time_.day());
+	Serial.print(F("-"));
+	Serial.println(time_.dayOfTheWeek());
 
+	Serial.println(clock.getTemperature());
+}
+/*
 bool time_ok()
 {
 	return false;
@@ -120,3 +158,4 @@ uint16_t time_day_diff(uint32_t timestamp)
 {
 	return (unixformat_ - timestamp) / (24 * 3600);
 }
+*/

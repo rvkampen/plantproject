@@ -1,14 +1,9 @@
-#ifndef _REPORT_h
-#define _REPORT_h
+#pragma once 
+
+#include "arduino.h"
 
 #include <ArduinoJson.hpp>
 #include <ArduinoJson.h>
-
-#if defined(ARDUINO) && ARDUINO >= 100
-	#include "arduino.h"
-#else
-	#include "WProgram.h"
-#endif
 
 class Report
 {
@@ -23,5 +18,3 @@ private:
 	JsonObject* root;
 	JsonArray* measurements;
 };
-
-#endif

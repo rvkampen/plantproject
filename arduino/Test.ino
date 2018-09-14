@@ -11,13 +11,14 @@
 void setup()
 {
 	Serial.begin(115200);
-	Serial.println(F("initializing..."));
-	//lcd_init();
-	//pin_init();
+	Serial.println(F("Starting..."));
 	network_init();
 	ntp_init();
-	time_init(ntp_time_safe());
-	Serial.println(F("ready to go!"));
+	time_init(ntp_request_time_safe());
+
+	//lcd_init();
+	//pin_init();
+	Serial.println(F("Startup done!"));
 }
 
 void loop()

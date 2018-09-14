@@ -1,7 +1,7 @@
 #pragma once
 
+#include "arduino.h"
+
 void ntp_init();
 
-unsigned long ntp_request_time();
-
-unsigned long ntp_time_safe();
+uint32_t ntp_request_time_safe();

@@ -13,13 +13,10 @@ void network_init()
 	digitalWrite(4, HIGH);
 
 	Serial.print(F("Starting ethernet..."));
-	if (!Ethernet.begin(mac))
+	if (!Ethernet.begin(mac, 10000UL, 10000UL))
 		Serial.println(F("failed"));
 	else
 		Serial.println(Ethernet.localIP());
-
-	delay(2000);
-	Serial.println(F("Ready"));
 }
 
 bool http_post(char* domainBuffer, int remoteport, char* page, const String& data)

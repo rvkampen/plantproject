@@ -32,11 +32,15 @@ EthernetUDP Udp;							// A UDP instance to let us send and receive packets over
 
 void ntp_init()
 {
-	Udp.begin(localPort);
+	Serial.print(F("Init NTP..."));
+	if (!Udp.begin(localPort))
+		Serial.println(F("failed"));
+	else
+		Serial.println(F("Done"));
 }
 
 // send an NTP request to the time server at the given address
-void send_ntp_packet(const char * address)
+bool send_ntp_packet(const char * address)
 {
 	// set all bytes in the buffer to 0
 	memset(packetBuffer, 0, NTP_PACKET_SIZE);
@@ -53,73 +57,85 @@ void send_ntp_packet(const char * address)
 	packetBuffer[15] = 52;
 
 	// all NTP fields have been given values, now you can send a packet requesting a timestamp:
-	Udp.beginPacket(address, 123); // NTP requests are to port 123
-	Udp.write(packetBuffer, NTP_PACKET_SIZE);
-	Udp.endPacket();
+	bool begin = Udp.beginPacket(address, 123); // NTP requests are to port 123
+	bool write = Udp.write(packetBuffer, NTP_PACKET_SIZE);
+	bool end = Udp.endPacket();
+	return begin && write && end;
 }
 
-unsigned long ntp_request_time()
+uint32_t ntp_request_time()
 {
-	Ethernet.maintain();
-	Serial.print(F("Go..."));
-	for (int attempt = 0; attempt < 3; attempt++)
+	Serial.print(F("NTP time..."));
+
+	bool send = send_ntp_packet(timeServer); // send an NTP packet to a time server
+	if (!send)
 	{
-		send_ntp_packet(timeServer); // send an NTP packet to a time server
-		for (int waiting = 0; waiting < 10; waiting++) {
-			delay(10);			   // wait a bit to see if a reply is available
-			if (Udp.parsePacket())
-			{
-				Serial.print(F("Done"));
-				Serial.print(attempt);
-				Serial.print(F("-"));
-				Serial.print(waiting);
-				Serial.print(F("-"));
-				// We've received a packet, read the data into the buffer
-				Udp.read(packetBuffer, NTP_PACKET_SIZE);
+		Serial.println(F("failed to send"));
+		return 0;
+	}
 
-				// The timestamp starts at byte 40 of the received packet and is four bytes,
-				// or two words, long. First, extract the two words:
-				unsigned long highWord = word(packetBuffer[40], packetBuffer[41]);
-				unsigned long lowWord = word(packetBuffer[42], packetBuffer[43]);
-				// combine the four bytes (two words) into a long integer
-				// this is NTP time (seconds since Jan 1 1900):
-				unsigned long secsSince1900 = highWord << 16 | lowWord;
-				//Serial.print(F("Seconds since Jan 1 1900 = "));
-				//Serial.println(secsSince1900);
+	for (int waiting = 0; waiting < 10; waiting++)
+	{
+		delay(10);			   // wait a bit to see if a reply is available
+		int packetSize = Udp.parsePacket();
+		if (packetSize > 0)
+		{
+			Serial.print(F("done in "));
+			Serial.print(waiting);
+			Serial.print(F("0ms - time: "));
 
-				// now convert NTP time into everyday time:
-				Serial.print(F("Unix time = "));
-				// Unix time starts on Jan 1 1970. In seconds, that's 2208988800:
-				const unsigned long seventyYears = 2208988800UL;
-				// subtract seventy years:
-				unsigned long epoch = secsSince1900 - seventyYears;
-				// print Unix time:
-				Serial.print(epoch);
+			// We've received a packet, read the data into the buffer
+			int readbytes = Udp.read(packetBuffer, NTP_PACKET_SIZE);
 
-				// print the hour, minute and second:
-				Serial.print(F("-The UTC time is "));	// UTC is the time at Greenwich Meridian (GMT)
-				Serial.print((epoch % 86400L) / 3600);	// print the hour (86400 equals secs per day)
-				Serial.print(F(":"));
-				if (((epoch % 3600) / 60) < 10)			// In the first 10 minutes of each hour, we"ll want a leading "0"
-					Serial.print(F("0"));
-				Serial.print((epoch % 3600) / 60);		// print the minute (3600 equals secs per minute)
-				Serial.print(F(":"));
-				if ((epoch % 60) < 10)					// In the first 10 seconds of each minute, we"ll want a leading "0"
-					Serial.print(F("0"));
-				Serial.println(epoch % 60);				// print the second
+			// The timestamp starts at byte 40 of the received packet and is four bytes,
+			// or two words, long. First, extract the two words:
+			uint32_t highWord = word(packetBuffer[40], packetBuffer[41]);
+			uint32_t lowWord = word(packetBuffer[42], packetBuffer[43]);
+			// combine the four bytes (two words) into a long integer
+			// this is NTP time (seconds since Jan 1 1900):
+			uint32_t secsSince1900 = highWord << 16 | lowWord;
+			//Serial.print(F("Seconds since Jan 1 1900 = "));
+			//Serial.println(secsSince1900);
 
-				return epoch;
-			}
+			// now convert NTP time into everyday time:
+			//Serial.print(F("Unix time = "));
+			// Unix time starts on Jan 1 1970. In seconds, that's 2208988800:
+			const uint32_t seventyYears = 2208988800UL;
+			// subtract seventy years:
+			uint32_t epoch = secsSince1900 - seventyYears;
+			// print Unix time:
+			//Serial.print(epoch);
+
+			// print the hour, minute and second:
+			//Serial.print(F("-The UTC time is "));	// UTC is the time at Greenwich Meridian (GMT)
+			//Serial.print((epoch % 86400L) / 3600);	// print the hour (86400 equals secs per day)
+			//Serial.print(F(":"));
+			//if (((epoch % 3600) / 60) < 10)			// In the first 10 minutes of each hour, we"ll want a leading "0"
+			//	Serial.print(F("0"));
+			//Serial.print((epoch % 3600) / 60);		// print the minute (3600 equals secs per minute)
+			//Serial.print(F(":"));
+			//if ((epoch % 60) < 10)					// In the first 10 seconds of each minute, we"ll want a leading "0"
+			//	Serial.print(F("0"));
+			//Serial.println(epoch % 60);				// print the second
+
+			Serial.println(epoch);
+			return epoch;
 		}
 	}
-	Serial.println(F("FAIL"));
+	Serial.println(F("failed"));
 	return 0;
 }
 
-unsigned long ntp_time_safe()
+uint32_t ntp_request_time_safe()
 {
-	unsigned long timecurr = 0;
-	unsigned long timeprev = 0;
+	Serial.print(F("Maintain ethernet..."));
+	int eth = Ethernet.maintain();
+	Serial.println(eth);
+
+	Serial.println(F("Request NTP time"));
+
+	uint32_t timecurr = 0;
+	uint32_t timeprev = 0;
 	int timei = 0;
 	for (int i = 0; i < 30; i++)// max 30 requests, we want 3 consequative right ones
 	{
@@ -134,6 +150,7 @@ unsigned long ntp_time_safe()
 		}
 		else if (timei == 2)
 		{
+			Serial.println(F("NTP Succes"));
 			return timecurr;
 		}
 		else
@@ -142,5 +159,6 @@ unsigned long ntp_time_safe()
 			timei++;
 		}
 	}
+	Serial.println(F("NTP Fail"));
 	return 0;
 }

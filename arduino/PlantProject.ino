@@ -5,6 +5,7 @@
 #include "Plant.h"
 #include "Report.h"
 #include "HTTPPost.h"
+#include "NTP.h"
 
 
 //--------------PARAMETERS-----------------
@@ -115,24 +116,27 @@ void update_plant_sensors()
 void setup()
 {
 	Serial.begin(115200);
-	Serial.println(F("initializing..."));
-	//time_init();
+	Serial.println(F("Starting..."));
+	network_init();
+	ntp_init();
+	time_init(ntp_request_time_safe());
+
 	//lcd_init();
 	//pin_init();
-	network_init();
-	Serial.println(F("ready to go!"));
+	Serial.println(F("Startup done!"));
 }
 
 void loop()
 {
-	//time_update();
+	time_update();
 	airsensor_update();
 	//lcd_update_top("--:--", humidity_formatted(), temperature_formatted());
 
 	String json = F("data=");
 	{// let our report go out of scope as soon as we have a report ready
-		Report r(0, airsensor_count());
+		Report r(time_unixtimestamp(), airsensor_count() + 1);
 		airsensor_addtoreport(r);
+		r.add(2, 1, String(clock_temperature()));
 		r.printTo(json);
 	}
 

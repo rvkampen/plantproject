@@ -13,7 +13,7 @@ void network_init()
 	digitalWrite(4, HIGH);
 
 	Serial.print(F("Starting ethernet..."));
-	if (!Ethernet.begin(mac, 10000UL, 10000UL))
+	if (!Ethernet.begin(mac, 20000UL, 40000UL))
 		Serial.println(F("failed"));
 	else
 		Serial.println(Ethernet.localIP());

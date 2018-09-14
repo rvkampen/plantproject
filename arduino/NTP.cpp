@@ -137,7 +137,7 @@ uint32_t ntp_request_time_safe()
 	uint32_t timecurr = 0;
 	uint32_t timeprev = 0;
 	int timei = 0;
-	for (int i = 0; i < 30; i++)// max 30 requests, we want 3 consequative right ones
+	for (int i = 0; i < 50; i++) // we want 3 consequative right ones (sometimes one is off)
 	{
 		timecurr = ntp_request_time();
 		if (timecurr == 0)

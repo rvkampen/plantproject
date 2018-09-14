@@ -99,6 +99,8 @@ void time_update()
 	Serial.print(formatted_);
 	Serial.print(F("-day of week: "));
 	Serial.print(time_.dayOfTheWeek());
+	Serial.print(F("-unix: "));
+	Serial.print(unixformat_);
 	Serial.print(F("-temp: "));
 	Serial.println(temp_);
 }

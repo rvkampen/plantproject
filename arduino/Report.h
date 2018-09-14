@@ -8,7 +8,7 @@
 class Report
 {
 public:
-	Report(double unixtime, int sensorcount);
+	Report(uint32_t unixtime, int sensorcount);
 
 	void add(int sensor, int type, const String&value);
 

@@ -13,6 +13,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Test", "Test.vcxproj", "{EB
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DS3231", "C:\Users\Richard\Documents\Arduino\libraries\DS3231\DS3231.vcxitems", "{BDA8F3CA-1BE3-4380-9DF5-E32895E04EE9}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Grove_-_Barometer_Sensor_BMP280", "C:\Users\Richard\Documents\Arduino\libraries\Grove_-_Barometer_Sensor_BMP280\Grove_-_Barometer_Sensor_BMP280.vcxitems", "{29EB4290-E4D8-4DAA-8B42-67A1C57A259A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x86 = Debug|x86

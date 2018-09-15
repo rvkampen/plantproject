@@ -25,7 +25,7 @@ This code is in the public domain.
 #include <EthernetUdp.h>
 
 unsigned int localPort = 8888;				// Local port to listen for UDP packets
-const char timeServer[] = "pool.ntp.org";//"time.nist.gov";	// time.nist.gov NTP server
+const char timeServer[] = "pool.ntp.org";   // time.nist.gov NTP server
 const int NTP_PACKET_SIZE = 48;				// NTP time stamp is in the first 48 bytes of the message
 byte packetBuffer[NTP_PACKET_SIZE];			// Buffer to hold incoming and outgoing packets
 EthernetUDP Udp;							// A UDP instance to let us send and receive packets over UDP
@@ -70,22 +70,22 @@ uint32_t ntp_request_time()
 	bool send = send_ntp_packet(timeServer); // send an NTP packet to a time server
 	if (!send)
 	{
-		Serial.println(F("failed to send"));
+		Serial.println(F("send_fail"));
 		return 0;
 	}
 
 	for (int waiting = 0; waiting < 10; waiting++)
 	{
 		delay(10);			   // wait a bit to see if a reply is available
-		int packetSize = Udp.parsePacket();
-		if (packetSize > 0)
+		
+		if (Udp.parsePacket())
 		{
-			Serial.print(F("done in "));
-			Serial.print(waiting);
-			Serial.print(F("0ms - time: "));
+			//Serial.print(F("done in "));
+			//Serial.print(waiting);
+			//Serial.print(F("0ms - time: "));
 
 			// We've received a packet, read the data into the buffer
-			int readbytes = Udp.read(packetBuffer, NTP_PACKET_SIZE);
+			Udp.read(packetBuffer, NTP_PACKET_SIZE);
 
 			// The timestamp starts at byte 40 of the received packet and is four bytes,
 			// or two words, long. First, extract the two words:
@@ -132,7 +132,7 @@ uint32_t ntp_request_time_safe()
 	int eth = Ethernet.maintain();
 	Serial.println(eth);
 
-	Serial.println(F("Request NTP time"));
+	Serial.println(F("Request NTP..."));
 
 	uint32_t timecurr = 0;
 	uint32_t timeprev = 0;
@@ -150,7 +150,7 @@ uint32_t ntp_request_time_safe()
 		}
 		else if (timei == 2)
 		{
-			Serial.println(F("NTP Succes"));
+			Serial.println(F("Succes"));
 			return timecurr;
 		}
 		else
@@ -159,6 +159,6 @@ uint32_t ntp_request_time_safe()
 			timei++;
 		}
 	}
-	Serial.println(F("NTP Fail"));
+	Serial.println(F("Fail"));
 	return 0;
 }

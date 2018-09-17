@@ -1,9 +1,9 @@
 //#include "pinout.h"
+#include "Report2.h"
 #include "time.h"
 #include "airsensor.h"
 //#include "LCD.h"
 //#include "Plant.h"
-#include "Report.h"
 #include "HTTPPost.h"
 #include "NTP.h"
 
@@ -140,7 +140,7 @@ void loop()
 		Report r(time_unixtimestamp(), airsensor_count() +1);
 		
 		airsensor_addtoreport(r);
-		r.add(2, 1, clock_temperature());
+		r.add(2, temperature, clock_temperature());
 		r.printTo(json);
 	}
 

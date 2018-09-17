@@ -1,7 +1,7 @@
 #pragma once 
 
 #include "arduino.h"
-#include "report.h"
+#include "Report2.h"
 
 void airsensor_init();
 void airsensor_update();

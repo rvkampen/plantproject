@@ -31,11 +31,11 @@ void airsensor_addtoreport(Report & r)
 {
 	if (black_state == 0) 
 	{
-		r.add(1, 1, blackbox.t);
-		r.add(1, 2, blackbox.h);
+		r.add(1, temperature, blackbox.t);
+		r.add(1, humidity, blackbox.h);
 	}
-	r.add(3, 1, temperature2_);
-	r.add(3, 3, pressure_);
+	r.add(3, temperature, temperature2_);
+	r.add(3, humidity, pressure_);
 }
 
 const String humidity_formatted()

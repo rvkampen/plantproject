@@ -8,7 +8,7 @@ Report::Report(uint32_t unixtime, int sensorcount)
 	measurements = &root->createNestedArray("sensor");
 }
 
-void Report::add(int sensor, int t, float v) {
+void Report::add(byte sensor, sensor_type t, float v) {
 	JsonObject& measurement = measurements->createNestedObject();
 	measurement.set("id", sensor);
 	measurement.set("type", t);

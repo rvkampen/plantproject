@@ -42,10 +42,13 @@
     <ClInclude Include="HTTPPost.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Report.h">
+    <ClInclude Include="NTP.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="NTP.h">
+    <ClInclude Include="Report2.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="sensor_type.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -71,10 +74,10 @@
     <ClCompile Include="HTTPPost.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Report.cpp">
+    <ClCompile Include="NTP.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="NTP.cpp">
+    <ClCompile Include="Report2.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

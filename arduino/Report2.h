@@ -35,9 +35,11 @@ public:
 	{
 		s.reserve(s.length() + 25 + count_ * 27);
 		char* buf = &s[s.length()];
-		buf += sprintf(buf, "{time:\"%u\",sensor:[", count_);
+		buf += sprintf(buf, "{\"time\":%u,\"sensor\":[", count_);
 		for (byte i(0); i < count_; ++i)
-			buf += sprintf(buf, "{id:%u,type:%u,value:%s}", sensors_[i].sensor, sensors_[i].type, String(sensors_[i].value, 2).c_str());
+			buf += sprintf(buf, "{\"id\":%u,\"type\":%u,\"value\":%s},", sensors_[i].sensor, sensors_[i].type, String(sensors_[i].value, 2).c_str());
+		if (count_)
+			buf--;
 		buf += sprintf(buf, "]}");
 	}
 

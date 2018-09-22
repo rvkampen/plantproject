@@ -1,56 +1,67 @@
+function getUrlVars() {
+	var vars = {};
+	var parts = window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi, function(m,key,value) {
+		vars[key] = value;
+	});
+	return vars;
+}
+function getVar(q) {
+	var v = getUrlVars();
+	if(v[q])
+		return v[q];
+	return "";
+}
+ 
 $(document).ready(function(){
 	$.ajax({
-		url: "data.php",
+		url: "data.php?timespan="+getVar('timespan'),
 		method: "GET",
 		success: function(data) {
-			console.log(data);
 
-			var temperature = [];
-			var humidity = [];
-
-			for(var i in data) {
-				if(data[i].measurement_type == 1)
-					temperature.push({x:new Date(data[i].measurement_time_server), y:data[i].measurement_value});
-				else if(data[i].measurement_type == 2)
-					humidity.push({x:new Date(data[i].measurement_time_server), y:data[i].measurement_value});
+			var sets = [];
+			
+			for(var set in data)
+			{
+				var measurements = [];
+				for(var i in data[set]["data"])
+				{
+					measurements.push({x:new Date(data[set]["data"][i].time), y:String(data[set]["data"][i].value)});
+				}
+				
+				var r=data[set]["type"][0] == "T"?255:50*data[set]["sensor_id"];
+				var g=data[set]["type"][0] == "P"?255:50*data[set]["sensor_id"];
+				var b=data[set]["type"][0] == "H"?255:50*data[set]["sensor_id"];
+				
+				var color = String(r)+", "+ String(g)+", "+ String(b);
+				
+				sets.push({
+							label: data[set]["name"], //+" ("+data[set]["count"]+")",
+							yAxisID: data[set]["type"][0],
+							backgroundColor: 'rgba('+color+', 0.75)',
+							borderColor: 'rgba('+color+', 0.75)',
+							hoverBackgroundColor: 'rgba('+color+', 1)',
+							hoverBorderColor: 'rgba('+color+', 1)',
+							fill: false,
+							data: measurements
+						});
 			}
 
 			var chartdata = {
-				datasets : [
-					{
-						label: 'Temperature',
-						yAxisID: 'T',
-						backgroundColor: 'rgba(255, 50, 50, 0.75)',
-						borderColor: 'rgba(255, 50, 50, 0.75)',
-						hoverBackgroundColor: 'rgba(255, 50, 50, 1)',
-						hoverBorderColor: 'rgba(255, 50, 50, 1)',
-						fill: false,
-						data: temperature
-					},
-					{
-						label: 'Humidity',
-						yAxisID: 'H',
-						backgroundColor: 'rgba(50, 50, 255, 0.75)',
-						borderColor: 'rgba(50, 50, 255, 0.75)',
-						hoverBackgroundColor: 'rgba(50, 50, 255, 1)',
-						hoverBorderColor: 'rgba(50, 50, 255, 1)',
-						fill: false,
-						data: humidity
-					}
-				]
+				datasets : sets
 			};
 
 			var ctx = $("#mycanvas");
 
-			var barGraph = new Chart(ctx, {
+			var graph = new Chart(ctx, {
 				type: 'line',
 				data: chartdata,
 				options: {
 					responsive: true,
+					animation: false,
 					title: {
 						display: true,
 						text: 'Environmental'
-					},					
+					},
 					scales: {
 						xAxes: [{
 							type: 'time',
@@ -60,7 +71,8 @@ $(document).ready(function(){
 								labelString: 'Date'
 							},
 						}],
-						yAxes: [{
+						yAxes: [
+						{
 							id: 'T',
 							position: 'left',
 							display: true,
@@ -70,7 +82,8 @@ $(document).ready(function(){
 								fontColor: 'rgba(255, 50, 50, 1)',
 								fontStyle: 'bold',
 							}
-						},{
+						},
+						{
 							id: 'H',
 							position: 'right',
 							display: true,
@@ -80,11 +93,23 @@ $(document).ready(function(){
 								fontColor: 'rgba(50, 50, 255, 1)',
 								fontStyle: 'bold',
 							}
+						},
+						{
+							id: 'P',
+							position: 'right',
+							display: true,
+							scaleLabel: {
+								display: true,
+								labelString: 'Pressure',
+								fontColor: 'rgba(50, 255, 50, 1)',
+								fontStyle: 'bold',
+							}
 						}]
-					},
-					legend: {
-						display: false
 					}
+					//,
+					//legend: {
+					//	display: false
+					//}
 				}
 			});
 		},
@@ -93,7 +118,3 @@ $(document).ready(function(){
 		}
 	});
 });
-
-
-
-

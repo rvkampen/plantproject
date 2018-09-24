@@ -1,26 +1,26 @@
-//#include "pinout.h"
+#include "pinout.h"
 #include "Report2.h"
 #include "time.h"
 #include "airsensor.h"
-//#include "LCD.h"
-//#include "Plant.h"
+#include "LCD.h"
+#include "Plant.h"
 #include "HTTPPost.h"
 #include "NTP.h"
 
-/*
+
 //--------------PARAMETERS-----------------
 Plant plants_[] = { 
 	Plant(leading_sensor_top, 512, 5000),
 };
 
-#define START_HOUR          8
-#define START_MINUTE        0
-#define END_HOUR            9
-#define END_MINUTE          0
-#define MAX_TIMEOUT			10000
+constexpr auto START_HOUR = 8;
+constexpr auto START_MINUTE = 0;
+constexpr auto END_HOUR = 9;
+constexpr auto END_MINUTE = 0;
+constexpr auto MAX_TIMEOUT = 10000;
 
 // the bucket is like a normal plant and has also two sensors (top = warning level, bottom = error level)
-#define BUCKET_SENSOR		15
+constexpr auto BUCKET_SENSOR = 15;
 //-----------------------------------------
 
 enum state
@@ -112,7 +112,7 @@ void update_plant_sensors()
 	read_sensors(top_sensor, bottom_sensor);
 	plants_[plant_counter_].update(time_unixtimestamp(), top_sensor, bottom_sensor);
 }
-*/
+
 void setup()
 {
 	Serial.begin(115200);
@@ -122,12 +122,12 @@ void setup()
 	ntp_init();
 	time_init(ntp_request_time_safe());
 
-	//lcd_init();
-	//pin_init();
+	lcd_init();
+	pin_init();
 	Serial.println(F("Startup done!"));
 }
 
-void loop()
+/*void loop()
 {
 	time_update();
 	airsensor_update();
@@ -151,9 +151,9 @@ void loop()
 	http_post(serverName, 80, pageName, json);
 
 	delay(30000);
-}
+}*/
 
-/*void loop()
+void loop()
 {
 	switch (state_)
 	{
@@ -255,16 +255,27 @@ void loop()
 		break;
 	case send_report:
 		{
-			String report("time="+String(time_unixtimestamp()) + "&hum=" + humidity_formatted() + "&temp=" + temperature_formatted());
-			Serial.println(report.c_str());
-			
-			char serverName[] = "www.example.com";
-			char pageName[] = "/receive.php";
-			http_post(serverName, 80, pageName, report);
+			String json = F("data=");
+			json.reserve(230);
+			{
+				// let our report go out of scope as soon as we have a report ready
+				Report r(time_unixtimestamp(), airsensor_count() + 1);
+
+				airsensor_addtoreport(r);
+				r.add(2, temperature, clock_temperature());
+				r.printTo(json);
+			}
+
+			Serial.println(json);
+
+			char serverName[] = "www.plantproject.dx.am";
+			char pageName[] = "/update.php";
+			http_post(serverName, 80, pageName, json);
+
 			state_ = update_environment;
 		}
 		break;
 	default:
 		break;
 	}
-}*/
+}

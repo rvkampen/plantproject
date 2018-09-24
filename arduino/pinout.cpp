@@ -1,6 +1,7 @@
 #include "pinout.h"
 
-void pin_init() {
+void pin_init()
+{
 	pinMode(SENSOR_TOP_PINA, INPUT);
 	pinMode(SENSOR_BOTTOM_PINA, INPUT);
 	pinMode(PIEZO_PIN, OUTPUT);

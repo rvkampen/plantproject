@@ -1,0 +1,1 @@
+data={"time":1536964777,"sensor":[{"id":1,"type":1,"value":"21.8"},{"id":1,"type":2,"value":"48.9"},{"id":2,"type":1,"value":"21.25"},{"id":3,"type":1,"value":"21.8"},{"id":1,"type":3,"value":"1008.00"}]}

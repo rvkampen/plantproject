@@ -1,9 +1,9 @@
-//#include "pinout.h"
+#include "pinout.h"
+#include "Report2.h"
 #include "time.h"
-//#include "airsensor.h"
-//#include "LCD.h"
-//#include "Plant.h"
-//#include "Report.h"
+#include "airsensor.h"
+#include "LCD.h"
+#include "Plant.h"
 #include "HTTPPost.h"
 #include "NTP.h"
 
@@ -12,9 +12,10 @@ void setup()
 {
 	Serial.begin(115200);
 	Serial.println(F("Starting..."));
-	network_init();
-	ntp_init();
-	time_init(ntp_request_time_safe());
+	//network_init();
+	airsensor_init();
+	//ntp_init();
+	//time_init(ntp_request_time_safe());
 
 	//lcd_init();
 	//pin_init();
@@ -23,8 +24,13 @@ void setup()
 
 void loop()
 {
-	time_update();
-	//airsensor_update();
+	//time_update();
+	Serial.println("test0");
+	airsensor_update();
+	Serial.println("test1");
+	Serial.println(temperature_formatted());
+	Serial.println("test2");
+
 	//lcd_update_top("--:--", humidity_formatted(), temperature_formatted());
 
 	//String json = F("data=");

@@ -1,49 +1,93 @@
 #include "airsensor.h"
 
 #include <Wire.h>
-#include <AM2320.h>
-#include <Seeed_BMP280.h>
 
-AM2320 blackbox;
-BMP280 baro;
+#define ENABLE_BLACKBOX
+#define ENABLE_BARO
 
-char black_state;
-float temperature2_, pressure_ ;
+#ifdef ENABLE_BLACKBOX
+	#include <AM2320.h>
+	AM2320 blackbox_;
+	char blackbox_state_;
+#endif
+
+#ifdef ENABLE_BARO
+	#include <Seeed_BMP280.h>
+	BMP280 baro_;
+	float baro_temperature_, baro_pressure_;
+#endif
 
 void airsensor_init()
 {
-	baro.init();
+#ifdef ENABLE_BARO
+	baro_.init();
+#endif
 }
 
 void airsensor_update() 
 {
-	black_state = blackbox.Read();
-	temperature2_ = baro.getTemperature();
-	pressure_ = baro.getPressure()/100.0;
+#ifdef ENABLE_BLACKBOX
+	blackbox_state_ = blackbox_.Read();
+#endif
+#ifdef ENABLE_BARO
+	baro_temperature_ = baro_.getTemperature();
+	baro_pressure_ = baro_.getPressure()/100.0;
+#endif
 }
 
 int airsensor_count()
 {
-	return 4; // total number of observations
+	// total number of observations
+	return 0
+#ifdef ENABLE_BLACKBOX
+			+ 2
+#endif
+#ifdef ENABLE_BARO
+			+ 2
+#endif
+	;
 }
 
 void airsensor_addtoreport(Report & r)
 {
-	if (black_state == 0) 
+#ifdef ENABLE_BLACKBOX
+	if (blackbox_state_ == 0) 
 	{
-		r.add(1, temperature, blackbox.t);
-		r.add(1, humidity, blackbox.h);
+		r.add(1, temperature, blackbox_.t);
+		r.add(1, humidity, blackbox_.h);
 	}
-	r.add(3, temperature, temperature2_);
-	r.add(3, humidity, pressure_);
+#endif
+#ifdef ENABLE_BARO
+	r.add(3, temperature, baro_temperature_);
+	r.add(3, humidity, baro_pressure_);
+#endif
 }
 
 const String humidity_formatted()
 {
-	return String(blackbox.h, 1);
+#ifdef ENABLE_BLACKBOX
+	return String(blackbox_.h, 1);
+#else
+	return String("--");
+#endif
 }
 
 const String temperature_formatted()
 {
-	return String(blackbox.t, 1);
+#ifdef ENABLE_BLACKBOX
+	return String(blackbox_.t, 1);
+#elif defined(ENABLE_BARO)
+	return String(baro_temperature_, 1);
+#else
+	return String("--");
+#endif
+}
+
+const String pressure_formatted()
+{
+#ifdef ENABLE_BARO
+	return String(baro_pressure_, 0);
+#else
+	return String("----");
+#endif
 }

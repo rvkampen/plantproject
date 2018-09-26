@@ -1,9 +1,9 @@
-#include "pinout.h"
+//#include "pinout.h"
 #include "Report2.h"
 #include "time.h"
 #include "airsensor.h"
-#include "LCD.h"
-#include "Plant.h"
+//#include "LCD.h"
+//#include "Plant.h"
 #include "HTTPPost.h"
 #include "NTP.h"
 
@@ -122,7 +122,7 @@ void setup()
 	ntp_init();
 	time_init(ntp_request_time_safe());
 
-	lcd_init();
+	//lcd_init();
 	//pin_init();
 	Serial.println(F("Startup done!"));
 }
@@ -133,10 +133,12 @@ void loop()
 	airsensor_update();
 	//lcd_update_top("--:--", humidity_formatted(), temperature_formatted());
 
+	byte sensor_count = airsensor_count() + 1;
 	String json;
+	json.reserve(Report::max_length(sensor_count));
 	{
 		// let our report go out of scope as soon as we have a report ready
-		Report r(time_unixtimestamp(), airsensor_count() + 1);
+		Report r(time_unixtimestamp(), sensor_count);
 
 		airsensor_addtoreport(r);
 

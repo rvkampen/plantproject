@@ -2,7 +2,7 @@
 
 #include <Ethernet.h>
 
-const byte mac[] = { 0xDE, 0xAD, 0xBE, 0xEF, 0xFE, 0xED };
+const byte mac[] = { 0xDE, 0xAD, 0xBE, 0xEF, 0xFE, 0xEB };
 
 EthernetClient client;
 
@@ -25,13 +25,12 @@ void network_init()
 
 bool http_post(char* domainBuffer, int remoteport, char* page, const String& data)
 {
-	Serial.print(F("Maintain ethernet..."));
+	Serial.print(F("Maintain..."));
 	int eth = Ethernet.maintain();
 	Serial.println(eth);
 
 	int inChar;
 	char outBuf[64];
-
 	
 	Serial.print(F("Connecting..."));
 	int conresult = client.connect(domainBuffer, remoteport);

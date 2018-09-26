@@ -13,10 +13,13 @@ class Report
 {
 public:
 	Report(uint32_t unixtime, byte sensorcount);
+	~Report();
 
 	void add(sensor_type type, float value);
 
 	void printTo(String &s);
+
+	static int max_length(byte sensorcount) { return 40 + sensorcount * 33; }
 
 private:
 	uint32_t unixtime_ = 0;

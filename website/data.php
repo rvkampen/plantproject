@@ -17,52 +17,50 @@ if(!$timespan)
 $data = array();
 
 $query_sensors = <<<SQL
-SELECT sensors.sensor_id,sensors.sensor_name, measurementtype.measurementtype_id,measurementtype.measurementtype_name, count(*) as count FROM measurements
-INNER JOIN measurementtype ON measurements.measurement_type = measurementtype.measurementtype_id 
-INNER JOIN sensors ON measurements.sensor_id = sensors.sensor_id
-WHERE measurement_time_server > DATE_SUB(NOW(),INTERVAL ? HOUR) AND measurements.measurement_value > 1
-GROUP By measurementtype.measurementtype_id, sensors.sensor_id
+SELECT sensor_type.sensor_type_id, sensor.sensor_id, sensor.sensor_name, measurementtype.measurementtype_name FROM sensor_type
+INNER JOIN measurementtype ON sensor_type.measurementtype_id = measurementtype.measurementtype_id 
+INNER JOIN sensor ON sensor_type.sensor_id = sensor.sensor_id
+ORDER BY measurementtype.measurementtype_id, sensor.sensor_id
 SQL;
 
 $stmt_sensors = $mysqli->prepare($query_sensors);
-$stmt_sensors->bind_param("d", $timespan);
 $stmt_sensors->execute();
-$stmt_sensors->bind_result($sensor_id, $sensor_name, $measurement_type, $measurement_name, $count);
+$stmt_sensors->bind_result($sensor_type_id, $sensor_id, $sensor_name, $measurementtype_name);
 while ($stmt_sensors->fetch()) 
 {
-	$data[$sensor_id."_".$measurement_type] = array("name"=>$sensor_name, "sensor_id"=>$sensor_id, "type"=>$measurement_name, "count"=>$count, "data"=>array());
+	$data["order".$sensor_type_id] = array("name"=>$sensor_name, "sensor_id"=>$sensor_id, "type"=>$measurementtype_name, "data"=>array());
 }
 $stmt_sensors->close();
 
 $query_data = <<<SQL2
-SELECT sensor_id
-     , measurement_type
-     , DATE_FORMAT(measurement_time_server, '%Y-%m-%dT%TZ') as time
-     , measurement_value as value
-FROM `measurements`
-WHERE measurement_time_server > DATE_SUB(NOW(),INTERVAL ? HOUR) AND measurements.measurement_value > 1
+SELECT `sensor_type_id`
+     , DATE_FORMAT(report.report_time_server, '%Y-%m-%dT%TZ') 
+     , measurement_value 
+FROM report
+INNER JOIN measurement ON report.report_id = measurement.report_id
+WHERE report.report_time_server > DATE_SUB(NOW(),INTERVAL ? HOUR)
 SQL2;
 
 if($timespan > 50)
 {
 	$query_data = <<<SQL2
-	SELECT sensor_id
-		 , measurement_type
-		 , DATE_FORMAT(MIN(measurement_time_server), '%Y-%m-%dT%TZ') as time
-		 , ROUND(AVG(measurement_value),2) as value
-	FROM `measurements`
-	WHERE measurement_time_server > DATE_SUB(NOW(),INTERVAL ? HOUR) AND measurements.measurement_value > 1
-	GROUP BY sensor_id, measurement_type, UNIX_TIMESTAMP(measurement_time_server) DIV 300
+	SELECT `sensor_type_id`
+		 , DATE_FORMAT(MIN(report.report_time_server), '%Y-%m-%dT%TZ') 
+		 , AVG(measurement_value)
+	FROM report
+	INNER JOIN measurement ON report.report_id = measurement.report_id
+	WHERE report.report_time_server > DATE_SUB(NOW(),INTERVAL ? HOUR)
+	GROUP BY sensor_type_id, UNIX_TIMESTAMP(report.report_time_server) DIV 300
 SQL2;
 }
 
 $stmt_data = $mysqli->prepare($query_data);
 $stmt_data->bind_param("d", $timespan);
 $stmt_data->execute();
-$stmt_data->bind_result($sensor_id, $measurement_type, $time, $value);
+$stmt_data->bind_result($sensor_type_id, $time, $value);
 while ($stmt_data->fetch()) 
 {
-	$data[$sensor_id."_".$measurement_type]["data"][]= array("time" => $time, "value" => $value);
+	$data["order".$sensor_type_id]["data"][]= array("time" => $time, "value" => $value);
 }
 $stmt_data->close();
 

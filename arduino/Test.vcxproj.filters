@@ -48,18 +48,15 @@
     <ClInclude Include="NTP.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <Text Include="procedure.txt" />
+    <ClInclude Include="sensor_type.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="LCD.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="time.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="airsensor.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Plant.cpp">
@@ -76,6 +73,9 @@
     </ClCompile>
     <ClCompile Include="NTP.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="airsensor.cpp">
+      <Filter>Header Files</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

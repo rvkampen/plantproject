@@ -7,7 +7,7 @@
 #include "HTTPPost.h"
 #include "NTP.h"
 
-
+/*
 //--------------PARAMETERS-----------------
 Plant plants_[] = { 
 	Plant(leading_sensor_top, 512, 5000),
@@ -111,7 +111,7 @@ void update_plant_sensors()
 	uint16_t  top_sensor, bottom_sensor;
 	read_sensors(top_sensor, bottom_sensor);
 	plants_[plant_counter_].update(time_unixtimestamp(), top_sensor, bottom_sensor);
-}
+}*/
 
 void setup()
 {
@@ -123,24 +123,26 @@ void setup()
 	time_init(ntp_request_time_safe());
 
 	lcd_init();
-	pin_init();
+	//pin_init();
 	Serial.println(F("Startup done!"));
 }
 
-/*void loop()
+void loop()
 {
 	time_update();
 	airsensor_update();
 	//lcd_update_top("--:--", humidity_formatted(), temperature_formatted());
 
-	String json = F("data=");
-	json.reserve(230);
+	String json;
 	{
 		// let our report go out of scope as soon as we have a report ready
-		Report r(time_unixtimestamp(), airsensor_count() +1);
-		
+		Report r(time_unixtimestamp(), airsensor_count() + 1);
+
 		airsensor_addtoreport(r);
-		r.add(2, temperature, clock_temperature());
+
+		if (time_clock_temperature() > 1) // only send it when its valid
+			r.add(clock_temperature, time_clock_temperature());
+
 		r.printTo(json);
 	}
 
@@ -151,8 +153,8 @@ void setup()
 	http_post(serverName, 80, pageName, json);
 
 	delay(30000);
-}*/
-
+}
+/*
 void loop()
 {
 	switch (state_)
@@ -262,7 +264,8 @@ void loop()
 				Report r(time_unixtimestamp(), airsensor_count() + 1);
 
 				airsensor_addtoreport(r);
-				r.add(2, temperature, clock_temperature());
+				if (time_clock_temperature() > 1)
+					r.add(clock_temperature, time_clock_temperature());
 				r.printTo(json);
 			}
 
@@ -279,3 +282,4 @@ void loop()
 		break;
 	}
 }
+*/

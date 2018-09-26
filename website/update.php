@@ -6,8 +6,8 @@ include 'db_config.php';
 // put data into db
 
 $json = $_POST["data"];
-//$json='{"time":"1531759100", "sensor":[{"id":"1","type":"1","value":"20.5"},{"id":"2","type":"1","value":"20.5"}]}';
-$arr = json_decode($json);
+//$json='{"time":"1531759100", "sensor":[{"sensor_type":"1","value":"20.5"},{"sensor_type":"2","value":"20.5"}]}';
+$json_obj = json_decode($json);
 
 //get connection
 $mysqli = new mysqli(DB_HOST, DB_USERNAME, DB_PASSWORD, DB_NAME);
@@ -15,13 +15,13 @@ $mysqli = new mysqli(DB_HOST, DB_USERNAME, DB_PASSWORD, DB_NAME);
 if(!$mysqli)
     die("Connection failed: " . $mysqli->error);
 
-foreach($arr->sensor as $row)
+$query = "INSERT INTO `report`(`report_time_local`) VALUES (FROM_UNIXTIME(".$mysqli->escape_string($json_obj->time)."))";
+$mysqli->query($query);
+
+foreach($json_obj->sensor as $measurement)
 {
-    // query to insert the data
-    $query = "INSERT INTO `measurements` (`sensor_id`, `measurement_type`, `measurement_time_local`, `measurement_value`)".
-    "VALUES (".$mysqli->escape_string($row->id).",".$mysqli->escape_string($row->type).",FROM_UNIXTIME(".$mysqli->escape_string($arr->time)."), ".$mysqli->escape_string($row->value).");";
-    
-    //execute query
+	$query = "INSERT INTO `measurement`(`report_id`, `sensor_type_id`, `measurement_value`) ".
+	          "SELECT  MAX(report_id),".$mysqli->escape_string($measurement->sensor_type).",".$mysqli->escape_string($measurement->value)." FROM report";
     $mysqli->query($query);
 }
 

@@ -8,7 +8,7 @@ String format_date(uint32_t timestamp);
 
 // maintain time
 void time_init(uint32_t timestamp);
-bool set_time(uint32_t timestamp);
+bool time_set(uint32_t timestamp);
 void time_update();
 
 // state
@@ -18,4 +18,4 @@ const String & time_formatted();
 const uint32_t & time_unixtimestamp();
 const uint16_t & time_day();
 uint16_t time_day_diff(uint32_t timestamp);
-float clock_temperature();
+float time_clock_temperature();

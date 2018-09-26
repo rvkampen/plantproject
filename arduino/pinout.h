@@ -12,13 +12,13 @@ constexpr auto SENSOR_BOTTOM_PINA = PIN_A1;
 
 //digital
 // 0 & 1 are used for serial communication
-constexpr auto PIEZO_PIN = 6;
-constexpr auto SELECT_PIN0 = 7;
-constexpr auto SELECT_PIN1 = 8;
-constexpr auto SELECT_PIN2 = 9;
-constexpr auto SELECT_PIN3 = 10;
-constexpr auto SENSOR_ENABLE_PIN = 11;
-constexpr auto PUMP_PIN = 12;
-constexpr auto WATERFLOW_PIN = 13;
+constexpr auto PIEZO_PIN = 2;
+constexpr auto SELECT_PIN0 = 3;
+constexpr auto SELECT_PIN1 = 4;
+constexpr auto SELECT_PIN2 = 5;
+constexpr auto SELECT_PIN3 = 6;
+constexpr auto SENSOR_ENABLE_PIN = 7;
+constexpr auto PUMP_PIN = 8;
+constexpr auto WATERFLOW_PIN = 9;
 
 void pin_init();

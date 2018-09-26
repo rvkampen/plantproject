@@ -53,13 +53,13 @@ void airsensor_addtoreport(Report & r)
 #ifdef ENABLE_BLACKBOX
 	if (blackbox_state_ == 0) 
 	{
-		r.add(1, temperature, blackbox_.t);
-		r.add(1, humidity, blackbox_.h);
+		r.add(blackbox_temperature, blackbox_.t);
+		r.add(blackbox_humidity, blackbox_.h);
 	}
 #endif
 #ifdef ENABLE_BARO
-	r.add(3, temperature, baro_temperature_);
-	r.add(3, humidity, baro_pressure_);
+	r.add(baro_temperature, baro_temperature_);
+	r.add(baro_pressure, baro_pressure_);
 #endif
 }
 

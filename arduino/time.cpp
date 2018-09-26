@@ -46,11 +46,11 @@ String format_date(uint32_t timestamp)
 // maintain
 void time_init(uint32_t timestamp)
 {
-	set_time(timestamp);
+	time_set(timestamp);
 	starttime_ = time_ = RTClib::now();
 }
 
-bool set_time(uint32_t timestamp)
+bool time_set(uint32_t timestamp)
 {
 	DateTime d(timestamp);
 	Serial.print(F("Setting time to: "));
@@ -126,7 +126,7 @@ const uint16_t & time_day()
 	return days_;
 }
 
-float clock_temperature()
+float time_clock_temperature()
 {
 	return temp_;
 }

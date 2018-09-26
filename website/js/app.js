@@ -35,7 +35,7 @@ $(document).ready(function(){
 				var color = String(r)+", "+ String(g)+", "+ String(b);
 				
 				sets.push({
-							label: data[set]["name"], //+" ("+data[set]["count"]+")",
+							label: data[set]["name"],
 							yAxisID: data[set]["type"][0],
 							backgroundColor: 'rgba('+color+', 0.75)',
 							borderColor: 'rgba('+color+', 0.75)',

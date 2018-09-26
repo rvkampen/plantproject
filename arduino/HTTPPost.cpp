@@ -13,23 +13,29 @@ void network_init()
 	digitalWrite(4, HIGH);
 
 	Serial.print(F("Starting ethernet..."));
-	if (!Ethernet.begin(mac, 20000UL, 40000UL))
+	if (!Ethernet.begin(mac))//, 20000UL, 40000UL))
 		Serial.println(F("failed"));
-	else
+	else 
+	{
+		Serial.print(F(".."));
+		delay(2000);
 		Serial.println(Ethernet.localIP());
+	}
 }
 
 bool http_post(char* domainBuffer, int remoteport, char* page, const String& data)
 {
-	// If using a static IP, comment out the next line
-	Ethernet.maintain();
+	Serial.print(F("Maintain ethernet..."));
+	int eth = Ethernet.maintain();
+	Serial.println(eth);
 
 	int inChar;
 	char outBuf[64];
 
-	Serial.print(F("connecting..."));
-
-	if (client.connect(domainBuffer, remoteport) == 1)
+	
+	Serial.print(F("Connecting..."));
+	int conresult = client.connect(domainBuffer, remoteport);
+	if (conresult == 1)
 	{
 		Serial.println(F("connected"));
 
@@ -47,7 +53,8 @@ bool http_post(char* domainBuffer, int remoteport, char* page, const String& dat
 	}
 	else
 	{
-		Serial.println(F("failed"));
+		Serial.print(F("failed -> "));
+		Serial.println(conresult);
 		return false;
 	}
 

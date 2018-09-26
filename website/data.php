@@ -39,6 +39,7 @@ SELECT `sensor_type_id`
 FROM report
 INNER JOIN measurement ON report.report_id = measurement.report_id
 WHERE report.report_time_server > DATE_SUB(NOW(),INTERVAL ? HOUR)
+ORDER BY report.report_time_server
 SQL2;
 
 if($timespan > 50)
@@ -51,6 +52,7 @@ if($timespan > 50)
 	INNER JOIN measurement ON report.report_id = measurement.report_id
 	WHERE report.report_time_server > DATE_SUB(NOW(),INTERVAL ? HOUR)
 	GROUP BY sensor_type_id, UNIX_TIMESTAMP(report.report_time_server) DIV 300
+	ORDER BY MIN(report.report_time_server)
 SQL2;
 }
 

@@ -51,6 +51,9 @@
     <ClInclude Include="sensor_type.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="plantsensor.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="LCD.cpp">
@@ -75,7 +78,10 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="airsensor.cpp">
-      <Filter>Header Files</Filter>
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="plantsensor.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -15,6 +15,16 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DS3231", "C:\Users\Richard\
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Grove_-_Barometer_Sensor_BMP280", "C:\Users\Richard\Documents\Arduino\libraries\Grove_-_Barometer_Sensor_BMP280\Grove_-_Barometer_Sensor_BMP280.vcxitems", "{29EB4290-E4D8-4DAA-8B42-67A1C57A259A}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "OneWire", "C:\Users\Richard\Documents\Arduino\libraries\OneWire\OneWire.vcxitems", "{F868725A-F76A-4770-A9A7-338FDAB515C6}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DallasTemperature", "C:\Users\Richard\Documents\Arduino\libraries\DallasTemperature\DallasTemperature.vcxitems", "{21BBC2DC-8F73-47C8-9A06-08B0D33B997B}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DHT_sensor_library", "C:\Users\Richard\Documents\Arduino\libraries\DHT_sensor_library\DHT_sensor_library.vcxitems", "{72F1CBBE-DB00-46E0-9AFC-C9C614DBFEB1}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DS1302", "C:\Users\Richard\Documents\Arduino\libraries\DS1302\DS1302.vcxitems", "{C2C84B69-E45F-48A7-BEED-4109665FAD00}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "LiquidCrystal_I2C", "C:\Users\Richard\Documents\Arduino\libraries\LiquidCrystal_I2C\LiquidCrystal_I2C.vcxitems", "{544805F2-7701-4D1D-A85A-C6B7AB0D2793}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x86 = Debug|x86

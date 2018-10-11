@@ -5,6 +5,7 @@
 #include "LCD.h"
 #include "Plant.h"
 #include "HTTPPost.h"
+#include "plantsensor.h"
 #include "NTP.h"
 
 
@@ -13,11 +14,15 @@ void setup()
 	Serial.begin(115200);
 	Serial.println(F("Starting..."));
 	//network_init();
-	airsensor_init();
+	//airsensor_init();
 	//ntp_init();
 	//time_init(ntp_request_time_safe());
+	plantsensor_init();
+	lcd_init();
 
-	//lcd_init();
+	pinMode(PIN_A0, INPUT);
+	pinMode(PIN_A1, INPUT);
+	pinMode(PIN_A2, INPUT);
 	//pin_init();
 	Serial.println(F("Startup done!"));
 }
@@ -25,11 +30,16 @@ void setup()
 void loop()
 {
 	//time_update();
-	Serial.println("test0");
-	airsensor_update();
-	Serial.println("test1");
-	Serial.println(temperature_formatted());
-	Serial.println("test2");
+	//Serial.println("test0");
+	plantsensor_update();
+	//Serial.println("test1");
+	for (uint8_t i = 0; i < plantsensor_count(); i++)
+	{
+		lcd_line(i, plantsensor_formatted(i)+String(" ")+String(analogRead(i)));
+		Serial.println(plantsensor_formatted(i));
+	}
+	delay(500);
+	//Serial.println("test2");
 
 	//lcd_update_top("--:--", humidity_formatted(), temperature_formatted());
 

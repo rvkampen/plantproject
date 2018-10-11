@@ -2,8 +2,9 @@
 
 #include <LiquidCrystal_I2C.h>
 
-// LCD 5v:  SCL/SDA   -> Arduino Analog 4 & 5
-LiquidCrystal_I2C lcd_(0x27, 16, 2);
+// LCD 5v:  SDA/SCL   -> Arduino Analog 4 & 5
+//LiquidCrystal_I2C lcd_(0x27, 16, 2);
+LiquidCrystal_I2C lcd_(0x27, 20, 4);
 
 void lcd_init()
 {
@@ -22,4 +23,10 @@ void lcd_update_state(byte index, char state)
 {
 	lcd_.setCursor(index, 1);
 	lcd_.print(state);
+}
+
+void lcd_line(uint8_t index, const String & val)
+{
+	lcd_.setCursor(0, index);
+	lcd_.print(val);
 }

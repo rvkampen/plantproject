@@ -1,4 +1,4 @@
-#include "pinout.h"
+#include "PinOut.h"
 
 void pin_init()
 {
@@ -20,4 +20,12 @@ void pin_init()
 	digitalWrite(SELECT_PIN3, LOW);
 	digitalWrite(SENSOR_ENABLE_PIN, LOW);
 	digitalWrite(PUMP_PIN, LOW);
+}
+
+void pin_select_output(byte plant)
+{
+	digitalWrite(SELECT_PIN0, plant & 0x01);
+	digitalWrite(SELECT_PIN1, plant & 0x02);
+	digitalWrite(SELECT_PIN2, plant & 0x04);
+	digitalWrite(SELECT_PIN3, plant & 0x08);
 }

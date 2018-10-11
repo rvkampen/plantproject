@@ -1,6 +1,6 @@
 #pragma once 
 
-#include "arduino.h"
+#include "Arduino.h"
 
 // util
 String format_time(uint32_t timestamp);

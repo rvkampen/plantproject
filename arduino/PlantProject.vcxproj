@@ -86,15 +86,16 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="airsensor.h" />
+    <ClInclude Include="AirSensor.h" />
+    <ClInclude Include="Configuration.h" />
     <ClInclude Include="HTTPPost.h" />
     <ClInclude Include="LCD.h" />
     <ClInclude Include="NTP.h" />
-    <ClInclude Include="pinout.h" />
+    <ClInclude Include="PinOut.h" />
     <ClInclude Include="Plant.h" />
     <ClInclude Include="Report2.h" />
-    <ClInclude Include="sensor_type.h" />
-    <ClInclude Include="time.h" />
+    <ClInclude Include="SensorType.h" />
+    <ClInclude Include="Time.h" />
     <ClInclude Include="__vm\.arduino.vsarduino.h" />
     <ClInclude Include="__vm\.PlantProject.vsarduino.h" />
   </ItemGroup>
@@ -102,14 +103,15 @@
     <Text Include="procedure.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="airsensor.cpp" />
+    <ClCompile Include="AirSensor.cpp" />
     <ClCompile Include="HTTPPost.cpp" />
     <ClCompile Include="LCD.cpp" />
     <ClCompile Include="NTP.cpp" />
-    <ClCompile Include="pinout.cpp" />
+    <ClCompile Include="PinOut.cpp" />
     <ClCompile Include="Plant.cpp" />
     <ClCompile Include="Report2.cpp" />
-    <ClCompile Include="time.cpp" />
+    <ClCompile Include="Configuration.cpp" />
+    <ClCompile Include="Time.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -1,7 +1,7 @@
 #pragma once 
 
-#include "arduino.h"
-#include "sensor_type.h"
+#include "Arduino.h"
+#include "SensorType.h"
 
 #include <ArduinoJson.hpp>
 #include <ArduinoJson.h>

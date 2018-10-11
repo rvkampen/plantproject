@@ -1,6 +1,6 @@
 #pragma once 
 
-#include "arduino.h"
+#include "Arduino.h"
 
 //------------PIN SETUP----------------------
 // analog
@@ -20,5 +20,8 @@ constexpr auto SELECT_PIN3 = 6;
 constexpr auto SENSOR_ENABLE_PIN = 7;
 constexpr auto PUMP_PIN = 8;
 constexpr auto WATERFLOW_PIN = 9;
+// 10 - 13 are used by SPI (sd & network)
 
 void pin_init();
+
+void pin_select_output(byte plant);

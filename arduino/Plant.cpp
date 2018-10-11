@@ -1,5 +1,5 @@
 #include "Plant.h"
-#include "time.h"
+#include "Time.h"
 
 Plant::Plant(leading_sensor l, uint16_t drylevel, uint16_t pump_time)
 	: leading_(l)

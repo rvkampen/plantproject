@@ -1,13 +1,12 @@
 #pragma once 
 
-#include "arduino.h"
-#include "Report2.h"
+#include "Arduino.h"
+
+class Report;
 
 void airsensor_init();
 void airsensor_update();
-int airsensor_count();
+int  airsensor_count();
 void airsensor_addtoreport(Report & r);
 
-const String humidity_formatted();
-const String temperature_formatted();
-const String pressure_formatted();
+const String airsensor_display();

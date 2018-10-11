@@ -1,9 +1,8 @@
-#include "airsensor.h"
+#include "AirSensor.h"
+#include "Report2.h"
+#include "Configuration.h"
 
 #include <Wire.h>
-
-#define ENABLE_BLACKBOX
-#define ENABLE_BARO
 
 #ifdef ENABLE_BLACKBOX
 	#include <AM2320.h>
@@ -63,16 +62,16 @@ void airsensor_addtoreport(Report & r)
 #endif
 }
 
-const String humidity_formatted()
+inline const String humidity_formatted()
 {
 #ifdef ENABLE_BLACKBOX
-	return String(blackbox_.h, 1);
+	return String(blackbox_.h, 0);
 #else
 	return String("--");
 #endif
 }
 
-const String temperature_formatted()
+inline const String temperature_formatted()
 {
 #ifdef ENABLE_BLACKBOX
 	return String(blackbox_.t, 1);
@@ -83,11 +82,16 @@ const String temperature_formatted()
 #endif
 }
 
-const String pressure_formatted()
+inline const String pressure_formatted()
 {
 #ifdef ENABLE_BARO
 	return String(baro_pressure_, 0);
 #else
 	return String("----");
 #endif
+}
+
+const String airsensor_display()
+{
+	return humidity_formatted() + String(F("% ")) + temperature_formatted() + String(F("C ")) + pressure_formatted() + String(F("hPa"));
 }

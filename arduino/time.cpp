@@ -1,5 +1,5 @@
-#include "time.h"
-#include "pinout.h"
+#include "Time.h"
+#include "PinOut.h"
 
 #include <DS3231.h>
 

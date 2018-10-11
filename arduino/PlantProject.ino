@@ -1,27 +1,12 @@
-//#include "pinout.h"
-#include "Report2.h"
-#include "time.h"
-#include "airsensor.h"
-//#include "LCD.h"
-//#include "Plant.h"
+#include "Configuration.h"
+#include "AirSensor.h"
 #include "HTTPPost.h"
+#include "LCD.h"
 #include "NTP.h"
-
-/*
-//--------------PARAMETERS-----------------
-Plant plants_[] = { 
-	Plant(leading_sensor_top, 512, 5000),
-};
-
-constexpr auto START_HOUR = 8;
-constexpr auto START_MINUTE = 0;
-constexpr auto END_HOUR = 9;
-constexpr auto END_MINUTE = 0;
-constexpr auto MAX_TIMEOUT = 10000;
-
-// the bucket is like a normal plant and has also two sensors (top = warning level, bottom = error level)
-constexpr auto BUCKET_SENSOR = 15;
-//-----------------------------------------
+#include "PinOut.h"
+#include "Plant.h"
+#include "Report2.h"
+#include "Time.h"
 
 enum state
 {
@@ -55,7 +40,6 @@ unsigned long pump_effective_ = 0;
 unsigned long last_run_ = 0;
 bool filter_watering_time_ = true;
 
-#define plant_count sizeof(plants_)/sizeof(Plant)
 
 bool is_watering_allowed(bool use_time)
 {
@@ -68,13 +52,6 @@ bool is_watering_allowed(bool use_time)
 		&& time_day()!=last_water_day_;
 }
 
-void select_output(byte plant)
-{
-	digitalWrite(SELECT_PIN0, plant & 0x01);
-	digitalWrite(SELECT_PIN1, plant & 0x02);
-	digitalWrite(SELECT_PIN2, plant & 0x04);
-	digitalWrite(SELECT_PIN3, plant & 0x08);
-}
 
 void read_sensors(uint16_t & top_sensor, uint16_t & bottom_sensor)
 {
@@ -110,8 +87,8 @@ void update_plant_sensors()
 {
 	uint16_t  top_sensor, bottom_sensor;
 	read_sensors(top_sensor, bottom_sensor);
-	plants_[plant_counter_].update(time_unixtimestamp(), top_sensor, bottom_sensor);
-}*/
+	get_plant(plant_counter_).update(time_unixtimestamp(), top_sensor, bottom_sensor);
+}
 
 void setup()
 {

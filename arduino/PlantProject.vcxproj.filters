@@ -13,30 +13,18 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Arduino">
+      <UniqueIdentifier>{357e3cf1-d467-49f1-8a05-3d307126dcd4}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="PlantProject.ino" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="__vm\.PlantProject.vsarduino.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="time.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="LCD.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="airsensor.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="pinout.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Plant.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="__vm\.arduino.vsarduino.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="HTTPPost.h">
@@ -48,7 +36,25 @@
     <ClInclude Include="Report2.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="sensor_type.h">
+    <ClInclude Include="__vm\.arduino.vsarduino.h">
+      <Filter>Arduino</Filter>
+    </ClInclude>
+    <ClInclude Include="__vm\.PlantProject.vsarduino.h">
+      <Filter>Arduino</Filter>
+    </ClInclude>
+    <ClInclude Include="AirSensor.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Configuration.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="PinOut.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SensorType.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Time.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -59,16 +65,7 @@
     <ClCompile Include="LCD.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="time.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="airsensor.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Plant.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="pinout.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="HTTPPost.cpp">
@@ -78,6 +75,18 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Report2.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="AirSensor.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="PinOut.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Time.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Configuration.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

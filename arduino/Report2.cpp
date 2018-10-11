@@ -1,4 +1,5 @@
 #include "Report2.h"
+#include "Configuration.h"
 
 Report::Report(uint32_t unixtime, byte sensorcount)
 	: unixtime_(unixtime)
@@ -46,6 +47,15 @@ void Report::printTo(String &s)
 		op++; op_succes += s.concat("},");
 	}
 	if (count_)
+		s.setCharAt(s.length() - 1, ' ');
+	op++; op_succes += s.concat("],plant=[");
+	for (byte i(0); i < get_plant_count(); ++i)
+	{
+		op++; op_succes += s.concat("{\"humidity\":");
+		op++; op_succes += s.concat(get_plant(i).humidity());
+		op++; op_succes += s.concat("},");
+	}
+	if (get_plant_count())
 		s.setCharAt(s.length() - 1, ' ');
 	op++; op_succes += s.concat("]}");
 	//buf += sprintf(buf, "]}");

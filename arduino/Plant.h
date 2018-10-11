@@ -2,19 +2,12 @@
 
 #include "Arduino.h"
 
-enum leading_sensor
-{
-	leading_sensor_top,
-	leading_sensor_bottom,
-	leading_sensor_average
-};
-
 class Plant
 {
 public:
-	Plant(leading_sensor l, uint16_t drylevel, uint16_t pump_time);
+	Plant(uint16_t humidity_when_dry, uint16_t pump_time);
 
-	void update(uint32_t update_time, uint16_t top_sensor, uint16_t bottom_sensor);
+	void update(uint32_t update_time, uint16_t humidity);
 
 	void set_loose(uint32_t  time) { loose_time_ = time; }
 	bool is_loose() { return loose_time_ != 0; }
@@ -27,13 +20,13 @@ public:
 
 	void set_watered(uint32_t time) { watered_time = time; }
 
+	uint16_t humidity() { return humidity_sensor_; }
+
 private:
-	leading_sensor leading_ = leading_sensor_top;
-	uint16_t drylevel_ = 0;
+	uint16_t humidity_when_dry_ = 0;
 	uint16_t pump_time_ = 0;
 	uint32_t loose_time_ = 0;
 	uint32_t update_time_ = 0;
 	uint32_t watered_time = 0;
-	uint16_t top_sensor_ = 0;
-	uint16_t bottom_sensor_ = 0;
+	uint16_t humidity_sensor_ = 0;
 };

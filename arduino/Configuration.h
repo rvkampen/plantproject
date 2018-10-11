@@ -9,12 +9,16 @@ constexpr auto END_MINUTE = 0;
 // maximum timeout (ms) before we consider the hose to be loose
 constexpr auto MAX_TIMEOUT = 10000;
 
-// the bucket is like a normal plant and has two sensors (top = warning level, bottom = error level)
-constexpr auto BUCKET_SENSOR = 15;
+// the bucket is like a normal plant, enter the index here
+constexpr auto BUCKET_SENSOR_INDEX = 15;
+
+constexpr auto BUCKET_SENSOR_WARNING = 400;
+constexpr auto BUCKET_SENSOR_EMPTY = 600;
+
 
 // enable the sensors you connected (I2C)
 #define ENABLE_BLACKBOX
-#define ENABLE_BARO
+//#define ENABLE_BARO
 
 // configure plants in Configuration.cpp
 

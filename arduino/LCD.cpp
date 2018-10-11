@@ -13,10 +13,10 @@ void lcd_init()
 	lcd_.clear();
 }
 
-void lcd_update_top(const String & time, const String & humidity, const String & temperature)
+void lcd_update_top(const String & time, const String & meteo)
 {
 	lcd_.setCursor(0, 0);
-	lcd_.print(time + ' ' + humidity + '%' + temperature + 'C');
+	lcd_.print(time + ' ' + meteo);
 }
 
 void lcd_update_state(byte index, char state)

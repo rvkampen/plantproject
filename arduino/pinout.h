@@ -4,10 +4,8 @@
 
 //------------PIN SETUP----------------------
 // analog
-constexpr auto SENSOR_TOP_PIN = 0;
-constexpr auto SENSOR_TOP_PINA = PIN_A0;
-constexpr auto SENSOR_BOTTOM_PIN = 1;
-constexpr auto SENSOR_BOTTOM_PINA = PIN_A1;
+constexpr auto SENSOR_HUMIDITY_PIN = 0;
+constexpr auto SENSOR_HUMIDITY_PINA = PIN_A0;
 // pin 4 & 5 are used for I2C
 
 //digital

@@ -2,8 +2,7 @@
 
 void pin_init()
 {
-	pinMode(SENSOR_TOP_PINA, INPUT);
-	pinMode(SENSOR_BOTTOM_PINA, INPUT);
+	pinMode(SENSOR_HUMIDITY_PINA, INPUT);
 	pinMode(PIEZO_PIN, OUTPUT);
 	pinMode(SELECT_PIN0, OUTPUT);
 	pinMode(SELECT_PIN1, OUTPUT);

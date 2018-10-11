@@ -57,7 +57,7 @@ bool time_set(uint32_t timestamp)
 	Serial.print(format_date(d));
 	Serial.print(F(" - "));
 	Serial.print(format_time(d));
-	Serial.print(F(" - day of week = "));
+	Serial.print(F(" - dayofweek = "));
 	Serial.println(d.dayOfTheWeek());
 
 	if (d.year() >= 2018) // don't care about the past

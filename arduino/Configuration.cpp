@@ -1,7 +1,9 @@
 #include "Configuration.h"
 
+// +- 630 = completely dry
+// +- 320 = completely wet
 Plant plants_[] = {
-	Plant(leading_sensor_top, 512, 5000),
+	Plant(500, 5000),
 	// add plants (maximum is 15)
 };
 

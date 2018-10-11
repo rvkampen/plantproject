@@ -62,36 +62,26 @@ void airsensor_addtoreport(Report & r)
 #endif
 }
 
-inline const String humidity_formatted()
-{
-#ifdef ENABLE_BLACKBOX
-	return String(blackbox_.h, 0);
-#else
-	return String("--");
-#endif
-}
-
-inline const String temperature_formatted()
-{
-#ifdef ENABLE_BLACKBOX
-	return String(blackbox_.t, 1);
-#elif defined(ENABLE_BARO)
-	return String(baro_temperature_, 1);
-#else
-	return String("--");
-#endif
-}
-
-inline const String pressure_formatted()
-{
-#ifdef ENABLE_BARO
-	return String(baro_pressure_, 0);
-#else
-	return String("----");
-#endif
-}
-
 const String airsensor_display()
 {
-	return humidity_formatted() + String(F("% ")) + temperature_formatted() + String(F("C ")) + pressure_formatted() + String(F("hPa"));
+	String result;
+
+#ifdef ENABLE_BLACKBOX
+	result += String(blackbox_.t, 1);
+	result += "C ";
+#elif defined(ENABLE_BARO)
+	result += String(baro_temperature_, 1);
+	result += "C ";
+#endif
+
+#ifdef ENABLE_BLACKBOX
+	result += String(blackbox_.h, 0);
+	result += "% ";
+#endif
+
+#ifdef ENABLE_BARO
+	result += String(baro_pressure_, 0);
+	result += "hPa";
+#endif
+	return result;
 }

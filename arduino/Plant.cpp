@@ -1,18 +1,16 @@
 #include "Plant.h"
 #include "Time.h"
 
-Plant::Plant(leading_sensor l, uint16_t drylevel, uint16_t pump_time)
-	: leading_(l)
-	, drylevel_(drylevel)
+Plant::Plant(uint16_t humidity_when_dry, uint16_t pump_time)
+	: humidity_when_dry_(humidity_when_dry)
 	, pump_time_(pump_time)
 {
 }
 
-void Plant::update(uint32_t update_time, uint16_t top_sensor, uint16_t bottom_sensor)
+void Plant::update(uint32_t update_time, uint16_t humidity)
 {
 	update_time_ = update_time;
-	top_sensor_ = top_sensor;
-	bottom_sensor_ = bottom_sensor;
+	humidity_sensor_ = humidity;
 }
 
 char Plant::state()
@@ -40,14 +38,7 @@ char Plant::state()
 	return '0' + days;
 }
 
- bool Plant::needs_water()
+bool Plant::needs_water()
 {
-	int val = 1024;
-	switch (leading_)
-	{
-	case leading_sensor_top: val = top_sensor_; break;
-	case leading_sensor_bottom: val = bottom_sensor_; break;
-	case leading_sensor_average: val = (top_sensor_ + bottom_sensor_) / 2; break;
-	}
-	return val < drylevel_;
+	return humidity_sensor_ < humidity_when_dry_;
 }

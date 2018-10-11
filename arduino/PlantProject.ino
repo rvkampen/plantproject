@@ -32,8 +32,7 @@ state state_ = update_environment;
 errorstate errorstate_ = ok;
 bool watering_allowed_ = true;
 uint32_t last_water_day_ = 0;
-uint16_t bucket_sensor_empty_ = 0;
-uint16_t bucket_sensor_low_ = 0;
+uint16_t bucket_sensor_ = 0;
 byte plant_counter_ = 0;
 unsigned long pump_started_ = 0;
 unsigned long pump_effective_ = 0;
@@ -53,12 +52,11 @@ bool is_watering_allowed(bool use_time)
 }
 
 
-void read_sensors(uint16_t & top_sensor, uint16_t & bottom_sensor)
+void read_plant_sensor(uint16_t & humidity_sensor)
 {
 	digitalWrite(SENSOR_ENABLE_PIN, HIGH);
 	delay(10);
-	top_sensor = analogRead(SENSOR_TOP_PIN);
-	bottom_sensor = analogRead(SENSOR_BOTTOM_PIN);
+	humidity_sensor = analogRead(SENSOR_HUMIDITY_PIN);
 	digitalWrite(SENSOR_ENABLE_PIN, LOW);
 }
 
@@ -85,9 +83,9 @@ bool check_timeout(unsigned long now, unsigned long past, unsigned long timeout)
 
 void update_plant_sensors()
 {
-	uint16_t  top_sensor, bottom_sensor;
-	read_sensors(top_sensor, bottom_sensor);
-	get_plant(plant_counter_).update(time_unixtimestamp(), top_sensor, bottom_sensor);
+	uint16_t humidity_sensor;
+	read_plant_sensor(humidity_sensor);
+	get_plant(plant_counter_).update(time_unixtimestamp(), humidity_sensor);
 }
 
 void setup()
@@ -98,42 +96,11 @@ void setup()
 	airsensor_init();
 	ntp_init();
 	time_init(ntp_request_time_safe());
-
-	//lcd_init();
-	//pin_init();
+	lcd_init();
+	pin_init();
 	Serial.println(F("Startup done!"));
 }
 
-void loop()
-{
-	time_update();
-	airsensor_update();
-	//lcd_update_top("--:--", humidity_formatted(), temperature_formatted());
-
-	byte sensor_count = airsensor_count() + 1;
-	String json;
-	json.reserve(Report::max_length(sensor_count));
-	{
-		// let our report go out of scope as soon as we have a report ready
-		Report r(time_unixtimestamp(), sensor_count);
-
-		airsensor_addtoreport(r);
-
-		if (time_clock_temperature() > 1) // only send it when its valid
-			r.add(clock_temperature, time_clock_temperature());
-
-		r.printTo(json);
-	}
-
-	Serial.println(json);
-
-	char serverName[] = "www.plantproject.dx.am";
-	char pageName[] = "/update.php";
-	http_post(serverName, 80, pageName, json);
-
-	delay(30000);
-}
-/*
 void loop()
 {
 	switch (state_)
@@ -141,7 +108,7 @@ void loop()
 	case update_environment:
 		time_update();
 		airsensor_update();
-		lcd_update_top(time_formatted(), humidity_formatted(), temperature_formatted());
+		lcd_update_top(time_formatted(), airsensor_display());
 		if (check_timeout(time_unixtimestamp(), last_run_, 30 * 60))
 		{
 			bool firstrun = last_run_ == 0;
@@ -164,35 +131,35 @@ void loop()
 			delay(100);
 		break;
 	case evaluate_bucket:
-		select_output(BUCKET_SENSOR);
-		read_sensors(bucket_sensor_empty_, bucket_sensor_low_);
-		if (bucket_sensor_low_ < 512) 
+		pin_select_output(BUCKET_SENSOR_INDEX);
+		read_plant_sensor(bucket_sensor_);
+		if (bucket_sensor_ > BUCKET_SENSOR_EMPTY)
 		{
-			lcd_update_state(BUCKET_SENSOR, bucket_sensor_empty_ < 512 ?'!':'F');
+			lcd_update_state(BUCKET_SENSOR_INDEX, '!');
 			errorstate_ |= no_water;
 			if(watering_allowed_)
 				tone(PIEZO_PIN, 500, 300); // frequency Hz, duration ms
 		}
 		else
-			lcd_update_state(BUCKET_SENSOR, bucket_sensor_empty_ < 512 ? 'W' : '^');
+			lcd_update_state(BUCKET_SENSOR_INDEX, bucket_sensor_ > BUCKET_SENSOR_WARNING ? 'W' : '^');
 		if (watering_allowed_ && errorstate_ == ok)
 			last_water_day_ = time_day();
 		state_ = iterate;
 		break;
 	case iterate:
-		if (plant_counter_ < plant_count)
+		if (plant_counter_ < get_plant_count())
 			state_ = measure_plant;
 		else
 			state_ = send_report;
 		break;
 	case measure_plant:
-		select_output(plant_counter_);
+		pin_select_output(plant_counter_);
 		update_plant_sensors();
-		lcd_update_state(plant_counter_, plants_[plant_counter_].state());
+		lcd_update_state(plant_counter_, get_plant(plant_counter_).state());
 		if (watering_allowed_ 
 			&& errorstate_ == ok
-			&& plants_[plant_counter_].needs_water() 
-			&& plants_[plant_counter_].is_loose())
+			&& get_plant(plant_counter_).needs_water() 
+			&& get_plant(plant_counter_).is_loose())
 			state_ = water_plant_start;
 		else
 		{
@@ -218,26 +185,26 @@ void loop()
 		else if (check_timeout(millis(), pump_started_, MAX_TIMEOUT))
 		{
 			disable_pump();
-			plants_[plant_counter_].set_loose(time_unixtimestamp());
-			lcd_update_state(plant_counter_, plants_[plant_counter_].state());
+			get_plant(plant_counter_).set_loose(time_unixtimestamp());
+			lcd_update_state(plant_counter_, get_plant(plant_counter_).state());
 			plant_counter_++;
 			state_ = evaluate_bucket;
 		}
 	}
 	break;
 	case water_plant_pumping:
-		if (check_timeout(millis(), pump_effective_, plants_[plant_counter_].pump_time()))
+		if (check_timeout(millis(), pump_effective_, get_plant(plant_counter_).pump_time()))
 		{
-			lcd_update_state(plant_counter_, plants_[plant_counter_].state());
+			lcd_update_state(plant_counter_, get_plant(plant_counter_).state());
 			plant_counter_++;
 			state_ = evaluate_bucket;
-			plants_[plant_counter_].set_watered(time_unixtimestamp());
+			get_plant(plant_counter_).set_watered(time_unixtimestamp());
 		}
 		break;
 	case send_report:
 		{
 			String json = F("data=");
-			json.reserve(230);
+			json.reserve(230 + 9 + (get_plant_count() * 17));
 			{
 				// let our report go out of scope as soon as we have a report ready
 				Report r(time_unixtimestamp(), airsensor_count() + 1);
@@ -261,4 +228,3 @@ void loop()
 		break;
 	}
 }
-*/

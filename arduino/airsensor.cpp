@@ -7,7 +7,7 @@
 #ifdef ENABLE_BLACKBOX
 	#include <AM2320.h>
 	AM2320 blackbox_;
-	char blackbox_state_;
+	int8_t blackbox_state_;
 #endif
 
 #ifdef ENABLE_BARO

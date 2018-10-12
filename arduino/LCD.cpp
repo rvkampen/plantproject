@@ -3,8 +3,8 @@
 #include <LiquidCrystal_I2C.h>
 
 // LCD 5v:  SDA/SCL   -> Arduino Analog 4 & 5
-//LiquidCrystal_I2C lcd_(0x27, 16, 2);
-LiquidCrystal_I2C lcd_(0x27, 20, 4);
+LiquidCrystal_I2C lcd_(0x27, 16, 2);
+//LiquidCrystal_I2C lcd_(0x27, 20, 4);
 
 void lcd_init()
 {

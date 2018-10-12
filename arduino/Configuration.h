@@ -20,6 +20,8 @@ constexpr auto BUCKET_SENSOR_EMPTY = 600;
 #define ENABLE_BLACKBOX
 //#define ENABLE_BARO
 
+//#define ENABLE_NETWORK
+
 // configure plants in Configuration.cpp
 
 // -------------------------------------

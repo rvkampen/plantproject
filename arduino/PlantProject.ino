@@ -1,12 +1,15 @@
 #include "Configuration.h"
 #include "AirSensor.h"
-#include "HTTPPost.h"
 #include "LCD.h"
-#include "NTP.h"
 #include "PinOut.h"
 #include "Plant.h"
 #include "Report2.h"
 #include "Time.h"
+
+#ifdef ENABLE_NETWORK
+	#include "HTTPPost.h"
+	#include "NTP.h"
+#endif
 
 enum state
 {
@@ -92,10 +95,12 @@ void setup()
 {
 	Serial.begin(115200);
 	Serial.println(F("Starting..."));
-	network_init();
 	airsensor_init();
+#ifdef ENABLE_NETWORK
+	network_init();
 	ntp_init();
 	time_init(ntp_request_time_safe());
+#endif
 	lcd_init();
 	pin_init();
 	Serial.println(F("Startup done!"));
@@ -217,9 +222,11 @@ void loop()
 
 			Serial.println(json);
 
+#ifdef ENABLE_NETWORK
 			char serverName[] = "www.plantproject.dx.am";
 			char pageName[] = "/update.php";
 			http_post(serverName, 80, pageName, json);
+#endif 
 
 			state_ = update_environment;
 		}

@@ -54,30 +54,6 @@ bool is_watering_allowed(bool use_time)
 		&& time_day()!=last_water_day_;
 }
 
-
-void read_plant_sensor(uint16_t & humidity_sensor)
-{
-	digitalWrite(SENSOR_ENABLE_PIN, HIGH);
-	delay(10);
-	humidity_sensor = analogRead(SENSOR_HUMIDITY_PIN);
-	digitalWrite(SENSOR_ENABLE_PIN, LOW);
-}
-
-void enable_pump()
-{
-	digitalWrite(PUMP_PIN, HIGH);
-}
-
-void disable_pump()
-{
-	digitalWrite(PUMP_PIN, LOW);
-}
-
-bool is_water_at_hose_end()
-{
-	return digitalRead(WATERFLOW_PIN);
-}
-
 bool check_timeout(unsigned long now, unsigned long past, unsigned long timeout)
 {
 	auto duration = now - past; // overflow is covered by unsigned substraction
@@ -91,29 +67,12 @@ void update_plant_sensors()
 	get_plant(plant_counter_).update(time_unixtimestamp(), humidity_sensor);
 }
 
-void pin_debug()
-{
-	for (int i = 0; i < 16; i++)
-	{
-		pin_select_output(i);
-		uint16_t humidity_sensor;
-		read_plant_sensor(humidity_sensor);
-		Serial.print("Plant ");
-		Serial.print(i);
-		Serial.print(" humidity ");
-		Serial.print(humidity_sensor);
-		Serial.print(" hose end ");
-		Serial.println(is_water_at_hose_end());
-	}
-}
-
 void global_debug()
 {
 	time_debug();
 	airsensor_debug();
 	//lcd_debug();
-	//pin_debug();
-	//delay(10000);
+	pin_debug();
 }
 
 void setup()

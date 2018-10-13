@@ -4,6 +4,8 @@
 // +- 320 = completely wet
 Plant plants_[] = {
 	Plant(500, 5000),
+	Plant(500, 5000),
+	Plant(500, 5000),
 	// add plants (maximum is 15)
 };
 

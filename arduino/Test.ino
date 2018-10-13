@@ -1,8 +1,8 @@
-//#include "pinout.h"
+#include "pinout.h"
 //#include "Report2.h"
 //#include "time.h"
 //#include "airsensor.h"
-#include "LCD.h"
+//#include "LCD.h"
 //#include "Plant.h"
 //#include "HTTPPost.h"
 //#include "plantsensor.h"
@@ -18,17 +18,24 @@ void setup()
 	//ntp_init();
 	//time_init(0);
 	//plantsensor_init();
-	lcd_init();
+	//lcd_init();
 	//
 	//pinMode(PIN_A0, INPUT);
 	//pinMode(PIN_A1, INPUT);
 	//pinMode(PIN_A2, INPUT);
-	//pin_init();
+	pin_init();
+
 	Serial.println(F("Startup done!"));
 }
 
 void loop()
 {
+	pin_select_output(0);
+	enable_pump();
+	delay(500);
+	disable_pump();
+	delay(1000);
+
 	//lcd_line(0, "TEST");
 	//time_update();
 	//time_debug();

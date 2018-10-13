@@ -20,8 +20,16 @@ constexpr auto BUCKET_SENSOR_EMPTY = 600;
 // enable the sensors you connected (I2C)
 #define ENABLE_BLACKBOX
 //#define ENABLE_BARO
+#define ENABLE_NETWORK
+#define ENABLE_DEBUG_OUTPUT
 
-//#define ENABLE_NETWORK
+#ifdef ENABLE_DEBUG_OUTPUT
+#define DEBUG_PRINT(a)   Serial.print(a)
+#define DEBUG_PRINTLN(a) Serial.println(a)
+#else
+#define DEBUG_PRINT(a)
+#define DEBUG_PRINTLN(a) 
+#endif
 
 // configure plants in Configuration.cpp
 

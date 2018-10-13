@@ -78,7 +78,7 @@ void global_debug()
 void setup()
 {
 	Serial.begin(115200);
-	Serial.println(F("Starting..."));
+	DEBUG_PRINTLN(F("Starting..."));
 	airsensor_init();
 #ifdef ENABLE_NETWORK
 	network_init();
@@ -87,17 +87,22 @@ void setup()
 #endif
 	lcd_init();
 	pin_init();
-	Serial.println(F("Startup done!"));
+	DEBUG_PRINTLN(F("Startup done!"));
 }
 
 void loop()
 {
+	DEBUG_PRINT("Entering state ");
+	DEBUG_PRINTLN(state_);
 	switch (state_)
 	{
 	case update_environment:
+		DEBUG_PRINTLN();
 		time_update();
 		airsensor_update();
-	global_debug();
+#ifdef ENABLE_DEBUG_OUTPUT
+		global_debug();
+#endif 
 		lcd_update_top(time_formatted(), airsensor_display());
 		if (check_timeout(time_unixtimestamp(), last_run_, 30 * 60))
 		{
@@ -205,7 +210,7 @@ void loop()
 				r.printTo(json);
 			}
 
-			Serial.println(json);
+			DEBUG_PRINTLN(json);
 
 #ifdef ENABLE_NETWORK
 			char serverName[] = "www.plantproject.dx.am";

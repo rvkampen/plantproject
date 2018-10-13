@@ -25,9 +25,9 @@ void Report::add(sensor_type type, float value)
 
 void Report::printTo(String &s)
 {
-	Serial.print(F("report "));
-	Serial.print(count_);
-	Serial.println(F(" obs"));
+	DEBUG_PRINT(F("report "));
+	DEBUG_PRINT(count_);
+	DEBUG_PRINTLN(F(" obs"));
 
 	byte op = 0;
 	byte op_succes = 0;
@@ -62,8 +62,8 @@ void Report::printTo(String &s)
 	//s.setCharAt(, 0);
 
 
-	Serial.print(F("len "));
-	Serial.print(s.length());
-	Serial.print(F(" fail "));
-	Serial.println(op- op_succes);
+	DEBUG_PRINT(F("len "));
+	DEBUG_PRINT(s.length());
+	DEBUG_PRINT(F(" fail "));
+	DEBUG_PRINTLN(op- op_succes);
 }

@@ -1,5 +1,6 @@
 #include "Time.h"
 #include "PinOut.h"
+#include "Configuration.h"
 
 #include <DS3231.h>
 
@@ -69,8 +70,11 @@ void time_init(uint32_t timestamp)
 bool time_set(uint32_t timestamp)
 {
 	DateTime d(timestamp);
+
+#ifdef ENABLE_DEBUG_OUTPUT
 	Serial.print(F("Setting time to: "));
 	print_time(d);
+#endif 
 
 	if (d.year() >= 2018) // don't care about the past
 	{
@@ -82,7 +86,7 @@ bool time_set(uint32_t timestamp)
 		clock.setHour(d.hour());
 		clock.setMinute(d.minute());
 		clock.setSecond(d.second());
-		Serial.println(F(" Done setting time"));
+		DEBUG_PRINTLN(F(" Done setting time"));
 
 		time_update();
 		time_ok_ = true; // reset state, we're sure of it, well sort of...
@@ -90,7 +94,7 @@ bool time_set(uint32_t timestamp)
 	}
 	else
 	{
-		Serial.println(F(" Not a valid time"));
+		DEBUG_PRINTLN(F(" Not a valid time"));
 		time_update();
 		return false;
 	}
@@ -110,11 +114,13 @@ void time_update()
 
 void time_debug()
 {
+#ifdef ENABLE_DEBUG_OUTPUT
 	Serial.print(F(" -- Time state -- "));
 	print_time(time_);
 	Serial.print(F(" - temperature: "));
 	Serial.print(temp_);
 	Serial.println(F(" -- "));
+#endif
 }
 
 // state

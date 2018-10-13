@@ -91,6 +91,31 @@ void update_plant_sensors()
 	get_plant(plant_counter_).update(time_unixtimestamp(), humidity_sensor);
 }
 
+void pin_debug()
+{
+	for (int i = 0; i < 16; i++)
+	{
+		pin_select_output(i);
+		uint16_t humidity_sensor;
+		read_plant_sensor(humidity_sensor);
+		Serial.print("Plant ");
+		Serial.print(i);
+		Serial.print(" humidity ");
+		Serial.print(humidity_sensor);
+		Serial.print(" hose end ");
+		Serial.println(is_water_at_hose_end());
+	}
+}
+
+void global_debug()
+{
+	time_debug();
+	airsensor_debug();
+	//lcd_debug();
+	//pin_debug();
+	//delay(10000);
+}
+
 void setup()
 {
 	Serial.begin(115200);
@@ -113,6 +138,7 @@ void loop()
 	case update_environment:
 		time_update();
 		airsensor_update();
+	global_debug();
 		lcd_update_top(time_formatted(), airsensor_display());
 		if (check_timeout(time_unixtimestamp(), last_run_, 30 * 60))
 		{

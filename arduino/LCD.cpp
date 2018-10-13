@@ -13,6 +13,16 @@ void lcd_init()
 	lcd_.clear();
 }
 
+void lcd_debug()
+{
+	lcd_update_top("TI:ME", "XXC YY% ZZZZhPa");
+	lcd_line(1, "     Line");
+	lcd_update_state(0, 'T');
+	lcd_update_state(1, 'e');
+	lcd_update_state(2, 's');
+	lcd_update_state(3, 't');
+}
+
 void lcd_update_top(const String & time, const String & meteo)
 {
 	lcd_.setCursor(0, 0);

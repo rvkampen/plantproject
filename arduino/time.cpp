@@ -43,6 +43,17 @@ String format_date(uint32_t timestamp)
 	return format_date(DateTime(timestamp));
 }
 
+void print_time(const DateTime &time)
+{
+	Serial.print(format_date(time));
+	Serial.print(F(" - "));
+	Serial.print(format_time(time));
+	Serial.print(F(" - day of week: "));
+	Serial.print(time.dayOfTheWeek());
+	Serial.print(F(" - unix: "));
+	Serial.print(time.unixtime());
+}
+
 // maintain
 void time_init(uint32_t timestamp)
 {
@@ -54,11 +65,7 @@ bool time_set(uint32_t timestamp)
 {
 	DateTime d(timestamp);
 	Serial.print(F("Setting time to: "));
-	Serial.print(format_date(d));
-	Serial.print(F(" - "));
-	Serial.print(format_time(d));
-	Serial.print(F(" - dayofweek = "));
-	Serial.println(d.dayOfTheWeek());
+	print_time(d);
 
 	if (d.year() >= 2018) // don't care about the past
 	{
@@ -70,7 +77,7 @@ bool time_set(uint32_t timestamp)
 		clock.setHour(d.hour());
 		clock.setMinute(d.minute());
 		clock.setSecond(d.second());
-		Serial.println(F("Done setting time"));
+		Serial.println(F(" Done setting time"));
 
 		time_update();
 		time_ok_ = true; // reset state, we're sure of it, well sort of...
@@ -78,7 +85,7 @@ bool time_set(uint32_t timestamp)
 	}
 	else
 	{
-		Serial.println(F("Not a valid time"));
+		Serial.println(F(" Not a valid time"));
 		time_update();
 		return false;
 	}
@@ -93,16 +100,16 @@ void time_update()
 	unixformat_ = time_.unixtime();
 	days_ = date2days(time_.year(), time_.month(), time_.day());
 	temp_ = clock.getTemperature();
-	Serial.print(F("Time: "));
-	Serial.print(format_date(time_));
-	Serial.print(F("-"));
-	Serial.print(formatted_);
-	Serial.print(F("-day of week: "));
-	Serial.print(time_.dayOfTheWeek());
-	Serial.print(F("-unix: "));
-	Serial.print(unixformat_);
-	Serial.print(F("-temp: "));
-	Serial.println(temp_);
+}
+
+
+void time_debug()
+{
+	Serial.print(F(" -- Time state -- "));
+	print_time(time_);
+	Serial.print(F(" - temperature: "));
+	Serial.print(temp_);
+	Serial.println(F(" -- "));
 }
 
 // state

@@ -1,12 +1,12 @@
-#include "pinout.h"
-#include "Report2.h"
-#include "time.h"
-#include "airsensor.h"
+//#include "pinout.h"
+//#include "Report2.h"
+//#include "time.h"
+//#include "airsensor.h"
 #include "LCD.h"
-#include "Plant.h"
-#include "HTTPPost.h"
-#include "plantsensor.h"
-#include "NTP.h"
+//#include "Plant.h"
+//#include "HTTPPost.h"
+//#include "plantsensor.h"
+//#include "NTP.h"
 
 
 void setup()
@@ -16,28 +16,32 @@ void setup()
 	//network_init();
 	//airsensor_init();
 	//ntp_init();
-	//time_init(ntp_request_time_safe());
-	plantsensor_init();
+	//time_init(0);
+	//plantsensor_init();
 	lcd_init();
-
-	pinMode(PIN_A0, INPUT);
-	pinMode(PIN_A1, INPUT);
-	pinMode(PIN_A2, INPUT);
+	//
+	//pinMode(PIN_A0, INPUT);
+	//pinMode(PIN_A1, INPUT);
+	//pinMode(PIN_A2, INPUT);
 	//pin_init();
 	Serial.println(F("Startup done!"));
 }
 
 void loop()
 {
+	//lcd_line(0, "TEST");
 	//time_update();
+	//time_debug();
+	//airsensor_update();
+	//airsensor_debug();
 	//Serial.println("test0");
-	plantsensor_update();
-	//Serial.println("test1");
-	for (uint8_t i = 0; i < plantsensor_count(); i++)
-	{
-		lcd_line(i, plantsensor_formatted(i)+String(" ")+String(analogRead(i)));
-		Serial.println(plantsensor_formatted(i));
-	}
+	//plantsensor_update();
+	////Serial.println("test1");
+	//for (uint8_t i = 0; i < plantsensor_count(); i++)
+	//{
+	//	lcd_line(i, plantsensor_formatted(i)+String(" ")+String(analogRead(i)));
+	//	Serial.println(plantsensor_formatted(i));
+	//}
 	delay(500);
 	//Serial.println("test2");
 

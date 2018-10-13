@@ -23,15 +23,39 @@ void airsensor_init()
 #endif
 }
 
-void airsensor_update() 
+void airsensor_update()
 {
 #ifdef ENABLE_BLACKBOX
 	blackbox_state_ = blackbox_.Read();
 #endif
 #ifdef ENABLE_BARO
 	baro_temperature_ = baro_.getTemperature();
-	baro_pressure_ = baro_.getPressure()/100.0;
+	baro_pressure_ = baro_.getPressure() / 100.0;
 #endif
+}
+
+void airsensor_debug()
+{
+	Serial.print(" -- airsensor state");
+#ifdef ENABLE_BLACKBOX
+	Serial.print(" -- Blackbox ");
+	Serial.print(blackbox_state_);
+	if (blackbox_state_ == 0)
+	{
+		Serial.print(" temperature: ");
+		Serial.print(blackbox_.t);
+		Serial.print(" humidity: ");
+		Serial.print(blackbox_.h);
+	}
+#endif
+#ifdef ENABLE_BARO
+	Serial.print(" -- Baro ");
+	Serial.print(" temperature: ");
+	Serial.print(baro_temperature_);
+	Serial.print(" pressure: ");
+	Serial.println(baro_pressure_);
+#endif
+	Serial.println(" -- ");
 }
 
 int airsensor_count()

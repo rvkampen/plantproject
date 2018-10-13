@@ -10,6 +10,7 @@ String format_date(uint32_t timestamp);
 void time_init(uint32_t timestamp);
 bool time_set(uint32_t timestamp);
 void time_update();
+void time_debug();
 
 // state
 bool time_ok();

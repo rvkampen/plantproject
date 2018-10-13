@@ -3,7 +3,7 @@
 #include "Arduino.h"
 
 // util
-String format_time(uint32_t timestamp);
+String format_time(uint32_t timestamp, bool seconds = true, char sep = ':');
 String format_date(uint32_t timestamp);
 
 // maintain time

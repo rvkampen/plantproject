@@ -71,7 +71,7 @@ void global_debug()
 {
 	time_debug();
 	airsensor_debug();
-	//lcd_debug();
+	lcd_debug();
 	pin_debug();
 }
 
@@ -123,7 +123,7 @@ void loop()
 	case evaluate_bucket:
 		pin_select_output(BUCKET_SENSOR_INDEX);
 		read_plant_sensor(bucket_sensor_);
-		if (bucket_sensor_ > BUCKET_SENSOR_EMPTY)
+		if (bucket_sensor_ > BUCKET_SENSOR_EMPTY || bucket_sensor_ < BUCKET_SENSOR_MINIMUM) // if its less than ~300 its likely a faulty sensor
 		{
 			lcd_update_state(BUCKET_SENSOR_INDEX, '!');
 			errorstate_ |= no_water;
@@ -193,7 +193,7 @@ void loop()
 		break;
 	case send_report:
 		{
-			String json = F("data=");
+			String json;
 			json.reserve(230 + 9 + (get_plant_count() * 17));
 			{
 				// let our report go out of scope as soon as we have a report ready

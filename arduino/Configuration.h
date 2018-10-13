@@ -12,6 +12,7 @@ constexpr auto MAX_TIMEOUT = 10000;
 // the bucket is like a normal plant, enter the index here
 constexpr auto BUCKET_SENSOR_INDEX = 15;
 
+constexpr auto BUCKET_SENSOR_MINIMUM = 200;
 constexpr auto BUCKET_SENSOR_WARNING = 400;
 constexpr auto BUCKET_SENSOR_EMPTY = 600;
 

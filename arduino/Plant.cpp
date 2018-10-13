@@ -29,7 +29,7 @@ char Plant::state()
 			return 'D';
 	}
 	if (watered_time == 0)
-		return '0';
+		return 'S';
 	auto days = time_day_diff(watered_time);
 	if (days == 0)
 		return 'W';

@@ -14,23 +14,28 @@ bool time_ok_ = true;
 float temp_ = 0;
 
 // util
-String format_time(const DateTime & t)
+String format_time(const DateTime & t, bool seconds = true, char sep = ':')
 {
 	char output[9];
 	output[0] = t.hour()<10 ? '0' : char((t.hour() / 10) + '0');
 	output[1] = char((t.hour() % 10) + '0');
-	output[2] = ':';
+	output[2] = sep;
 	output[3] = t.minute()<10 ? '0' : char((t.minute() / 10) + '0');
 	output[4] = char((t.minute() % 10) + '0');
-	output[5] = ':';
-	output[6] = t.second()<10 ? '0' : char((t.second() / 10) + '0');
-	output[7] = char((t.second() % 10) + '0');
-	output[8] = 0;
+	if (seconds)
+	{
+		output[5] = sep;
+		output[6] = t.second() < 10 ? '0' : char((t.second() / 10) + '0');
+		output[7] = char((t.second() % 10) + '0');
+		output[8] = 0;
+	}
+	else
+		output[5] = 0;
 	return String(&output[0]);
 }
-String format_time(uint32_t timestamp)
+String format_time(uint32_t timestamp, bool seconds, char sep)
 {
-	return format_time(DateTime(timestamp));
+	return format_time(DateTime(timestamp), seconds, sep);
 }
 String format_date(const DateTime & t)
 {
@@ -96,7 +101,7 @@ void time_update()
 	DateTime old = time_;
 	time_ = RTClib::now();
 	time_ok_ &= old.unixtime() < time_.unixtime(); // time should only go forward
-	formatted_ = format_time(time_);
+	formatted_ = format_time(time_, false, millis() % 1000 < 500 ? ':' : ' '); // blinking : on display
 	unixformat_ = time_.unixtime();
 	days_ = date2days(time_.year(), time_.month(), time_.day());
 	temp_ = clock.getTemperature();

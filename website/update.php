@@ -28,4 +28,10 @@ foreach($json_obj->sensor as $measurement)
 //close connection
 $mysqli->close();
 
+$record = mktime().";".$json_obj->time;
+foreach($json_obj->sensor as $measurement)
+{
+	$record = $record.";".$measurement->sensor_type.";".$measurement->value;
+}
+file_put_contents(date('Y-m-d').".log", $record."\r\n", FILE_APPEND);
 ?>

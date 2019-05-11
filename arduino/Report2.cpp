@@ -53,6 +53,8 @@ void Report::printTo(String &s)
 	{
 		op++; op_succes += s.concat("{\"humidity\":");
 		op++; op_succes += s.concat(get_plant(i).humidity());
+		op++; op_succes += s.concat(",\"state\":");
+		op++; op_succes += s.concat(get_plant(i).get_state_update(unixtime_));
 		op++; op_succes += s.concat("},");
 	}
 	if (get_plant_count())

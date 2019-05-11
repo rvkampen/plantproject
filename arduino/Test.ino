@@ -5,7 +5,7 @@
 //#include "LCD.h"
 //#include "Plant.h"
 //#include "HTTPPost.h"
-//#include "plantsensor.h"
+#include "plantsensor.h"
 //#include "NTP.h"
 
 
@@ -13,30 +13,71 @@ void setup()
 {
 	Serial.begin(115200);
 	Serial.println(F("Starting..."));
+	pin_init();
+
 	//network_init();
 	//airsensor_init();
 	//ntp_init();
 	//time_init(0);
 	//plantsensor_init();
 	//lcd_init();
-	//
-	//pinMode(PIN_A0, INPUT);
-	//pinMode(PIN_A1, INPUT);
-	//pinMode(PIN_A2, INPUT);
-	pin_init();
 
 	Serial.println(F("Startup done!"));
 }
 
+void TestPump(int pump)
+{
+    Serial.print(F("Starting Pump "));
+    Serial.print(pump);
+    select_plant(pump);
+    enable_pump();
+    Serial.print(F(" ... "));
+    delay(2000);
+    disable_pump();
+    Serial.println(F("Stop!"));
+}
+
+void TestPumps(int max = 16)
+{
+    for (int i = 0; i < max; i++)
+    {
+        TestPump(i);
+        delay(1000);
+    }
+    delay(2000);
+}
+
+void TestSensor(int sensor)
+{
+    Serial.print(F("Starting Sensor "));
+    Serial.print(sensor);
+    select_plant(sensor);
+    Serial.println(F(" ... "));
+    plantsensor_init();
+    plantsensor_update();
+    plantsensor_print();
+
+    Serial.print(F("   Humidity: "));
+    Serial.println(humidity_sensor());
+    Serial.print(F("   Hose: "));
+    Serial.println(is_water_at_hose_end());
+    Serial.println(F("End Sensor!"));
+}
+
+void TestSensors(int max = 16)
+{
+    for (int i = 0; i < max; i++)
+    {
+        TestSensor(i);
+    }
+    delay(1000);
+}
+
+
 void loop()
 {
-	pin_select_output(0);
-	enable_pump();
-	delay(500);
-	disable_pump();
-	delay(1000);
-
-	//lcd_line(0, "TEST");
+    TestSensors(3);
+    //lcd_line(0, "TEST");
 	//time_update();
 	//time_debug();
 	//airsensor_update();
@@ -49,7 +90,7 @@ void loop()
 	//	lcd_line(i, plantsensor_formatted(i)+String(" ")+String(analogRead(i)));
 	//	Serial.println(plantsensor_formatted(i));
 	//}
-	delay(500);
+	//delay(500);
 	//Serial.println("test2");
 
 	//lcd_update_top("--:--", humidity_formatted(), temperature_formatted());

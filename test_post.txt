@@ -2,8 +2,8 @@ POST /update.php HTTP/1.1
 Host: www.plantproject.dx.am
 Connection: close
 Content-Type: application/x-www-form-urlencoded; charset=UTF-8
-Content-Length: 134
+Content-Length: 108
 
-data={"unixtime":"1531759100", "measurements":[{"sensorid":"1","type":"1","value":"20.5"},{"sensorid":"2","type":"1","value":"20.5"}]}
+data={"time":"1531759100", "sensor":[{"sensor_type":"1","value":"20.5"},{"sensor_type":"2","value":"20.5"}]}
 
 telnet www.plantproject.dx.am 80

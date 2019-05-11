@@ -3,7 +3,11 @@
 
 void pin_init()
 {
-	pinMode(SENSOR_HUMIDITY_PINA, INPUT);
+    // sensors
+    pinMode(SENSOR_HUMIDITY_PIN, INPUT);
+    pinMode(SENSOR_TEMPERATURE_PIN, INPUT);
+    pinMode(SENSOR_HOSE_END_PIN, INPUT);
+
 	pinMode(PIEZO_PIN, OUTPUT);
 	pinMode(SELECT_PIN0, OUTPUT);
 	pinMode(SELECT_PIN1, OUTPUT);
@@ -11,7 +15,6 @@ void pin_init()
 	pinMode(SELECT_PIN3, OUTPUT);
 	pinMode(SELECT_DISABLE_PIN, OUTPUT);
 	pinMode(PUMP_PIN, OUTPUT);
-	pinMode(WATERFLOW_PIN, INPUT);
 
 	digitalWrite(PIEZO_PIN, LOW);
 	digitalWrite(SELECT_PIN0, LOW);
@@ -19,10 +22,10 @@ void pin_init()
 	digitalWrite(SELECT_PIN2, LOW);
 	digitalWrite(SELECT_PIN3, LOW);
 	digitalWrite(SELECT_DISABLE_PIN, HIGH); // high is disabled
-	digitalWrite(PUMP_PIN, LOW);
+    disable_pump();
 }
 
-void pin_select_output(byte plant)
+void select_plant(byte plant)
 {
 	digitalWrite(SELECT_DISABLE_PIN, HIGH);
 	digitalWrite(SELECT_PIN0, plant & 0x01);
@@ -32,46 +35,44 @@ void pin_select_output(byte plant)
 	digitalWrite(SELECT_DISABLE_PIN, LOW);
 }
 
-void read_plant_sensor(uint16_t & humidity_sensor)
+uint16_t humidity_sensor()
 {
-	humidity_sensor = analogRead(SENSOR_HUMIDITY_PIN);
+	 return analogRead(SENSOR_HUMIDITY_PIN);
 }
 
 void enable_pump()
 {
-	digitalWrite(PUMP_PIN, HIGH);
+	digitalWrite(PUMP_PIN, LOW);
 }
 
 void disable_pump()
 {
-	digitalWrite(PUMP_PIN, LOW);
+	digitalWrite(PUMP_PIN, HIGH);
 }
 
-bool is_water_at_hose_end()
+uint16_t is_water_at_hose_end()
 {
-	return digitalRead(WATERFLOW_PIN);
+	return analogRead(SENSOR_HOSE_END_PIN) ;
 }
 
 void pin_debug()
 {
 	for (int i = 0; i < get_plant_count(); i++)
 	{
-		pin_select_output(i);
-		uint16_t humidity_sensor;
-		read_plant_sensor(humidity_sensor);
+		select_plant(i);
+		uint16_t humidity = humidity_sensor();
 		Serial.print(" -- Plant ");
 		Serial.print(i);
 		Serial.print(" humidity ");
-		Serial.print(humidity_sensor);
+		Serial.print(humidity);
 		Serial.print(" hose end ");
 		Serial.println(is_water_at_hose_end());
 	}
 
-	pin_select_output(BUCKET_SENSOR_INDEX);
-	uint16_t humidity_sensor;
-	read_plant_sensor(humidity_sensor);
+	select_plant(BUCKET_SENSOR_INDEX);
+    uint16_t humidity = humidity_sensor();
 	Serial.print(" -- bucket ");
 	Serial.print(BUCKET_SENSOR_INDEX);
 	Serial.print(" humidity ");
-	Serial.println(humidity_sensor);
+	Serial.println(humidity);
 }

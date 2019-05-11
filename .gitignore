@@ -35,3 +35,7 @@ arduino/.vs/
 arduino/__vm/
 arduino/Release/
 oldwebsite/
+
+#dummy data
+.statemachine/
+.db/

@@ -126,7 +126,7 @@ void loop()
 			delay(100);
 		break;
 	case evaluate_bucket:
-		pin_select_output(BUCKET_SENSOR_INDEX);
+		select_plant(BUCKET_SENSOR_INDEX);
 		read_plant_sensor(bucket_sensor_);
 		if (bucket_sensor_ > BUCKET_SENSOR_EMPTY || bucket_sensor_ < BUCKET_SENSOR_MINIMUM) // if its less than ~300 its likely a faulty sensor
 		{
@@ -148,7 +148,7 @@ void loop()
 			state_ = send_report;
 		break;
 	case measure_plant:
-		pin_select_output(plant_counter_);
+		select_plant(plant_counter_);
 		update_plant_sensors();
 		lcd_update_state(plant_counter_, get_plant(plant_counter_).state());
 		if (watering_allowed_ 

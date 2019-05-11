@@ -42,3 +42,15 @@ bool Plant::needs_water()
 {
 	return humidity_sensor_ < humidity_when_dry_;
 }
+
+char Plant::get_state_update(uint32_t time)
+{
+	if (is_loose())
+		return 'L';
+	if(watered_time == 0)
+		return 'S';
+	if(time == watered_time)
+		return 'W';
+	if(needs_water())
+		return 'D';
+}

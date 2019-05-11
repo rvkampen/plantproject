@@ -5,6 +5,8 @@
 
 void plantsensor_init();
 void plantsensor_update();
+void plantsensor_print();
+
 uint8_t plantsensor_count();
 void plantsensor_addtoreport(Report & r);
 

@@ -1,13 +1,12 @@
 #include "plantsensor.h"
+#include "pinout.h"
 #include <OneWire.h> 
 #include <DallasTemperature.h>
 
-// Data wire is plugged into pin 2 on the Arduino 
-#define ONE_WIRE_BUS 2 
 
 // Setup a oneWire instance to communicate with any OneWire devices  
 // (not just Maxim/Dallas temperature ICs) 
-OneWire oneWire(ONE_WIRE_BUS);
+OneWire oneWire(SENSOR_TEMPERATURE_PIN);
 
 // Pass our oneWire reference to Dallas Temperature. 
 DallasTemperature sensors(&oneWire);
@@ -28,23 +27,39 @@ void plantsensor_init()
 
 void plantsensor_update()
 {
-	Serial.print(F("Requesting temperatures..."));
+	//Serial.print(F("Requesting temperatures..."));
 	sensors.requestTemperatures(); // Send the command to get temperature readings 
-	Serial.println(F("DONE"));
+	//Serial.println(F("DONE"));
 
-	Serial.print(F("Reading temperatures... "));
-	for (sensor_count_ = 0; sensors.getAddress(&sensors_[sensor_count_].address[0], sensor_count_); sensor_count_++)
-	{
-		sensors_[sensor_count_].value = sensors.getTempC(&sensors_[sensor_count_].address[0]);
-	}
-	Serial.print(sensor_count_);
-	Serial.println(F(" Found!"));
+	//Serial.print(F("Reading temperatures... "));
+    for (sensor_count_ = 0; sensors.getAddress(&sensors_[sensor_count_].address[0], sensor_count_); sensor_count_++)
+    {
+        sensors_[sensor_count_].value = sensors.getTempC(&sensors_[sensor_count_].address[0]);
+    }
+	//Serial.print(sensor_count_);
+	//Serial.println(F(" Found!"));
+
 
 
 	//Serial.println(sensors.getTempCByIndex(0)); // Why "byIndex"?  
 	  // You can have more than one DS18B20 on the same bus.  
 	  // 0 refers to the first IC on the wire 
 
+}
+
+void plantsensor_print()
+{
+    for (int i = 0; i < sensor_count_; ++i)
+    {
+        Serial.print(F("   Temperature "));
+        for (auto && c : sensors_[i].address)
+        {
+            Serial.print(c, HEX);
+        }
+        Serial.print(F(" - "));
+        Serial.print(plantsensor_formatted(i));
+        Serial.println(F(" C"));
+    }
 }
 
 uint8_t plantsensor_count()

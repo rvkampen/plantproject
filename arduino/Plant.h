@@ -22,6 +22,8 @@ public:
 
 	uint16_t humidity() { return humidity_sensor_; }
 
+	char get_state_update(uint32_t time);
+
 private:
 	uint16_t humidity_when_dry_ = 0;
 	uint16_t pump_time_ = 0;

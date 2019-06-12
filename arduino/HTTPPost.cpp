@@ -12,15 +12,21 @@ void network_init()
 	pinMode(4, OUTPUT);
 	digitalWrite(4, HIGH);
 
-	Serial.print(F("Starting ethernet..."));
-	if (!Ethernet.begin(mac))//, 20000UL, 40000UL))
-		Serial.println(F("failed"));
-	else 
-	{
-		Serial.print(F(".."));
-		delay(2000);
-		Serial.println(Ethernet.localIP());
-	}
+    for (bool success = false; !success;)
+    {
+        Serial.print(F("Starting ethernet..."));
+        if (!Ethernet.begin(mac)) {//, 20000UL, 40000UL))
+            Serial.println(F("failed"));
+            delay(2000);
+        }
+        else
+        {
+            Serial.print(F(".."));
+            delay(1000);
+            Serial.println(Ethernet.localIP());
+            success = Ethernet.localIP()[0] != 192;
+        }
+    }
 }
 
 bool http_post(char* domainBuffer, int remoteport, char* page, const String& data)

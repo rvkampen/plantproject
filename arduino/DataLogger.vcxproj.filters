@@ -45,9 +45,6 @@
     <ClInclude Include="Configuration.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="PinOut.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="SensorType.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -71,13 +68,7 @@
     <ClCompile Include="AirSensor.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="PinOut.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Time.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Configuration.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

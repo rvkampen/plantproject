@@ -1,5 +1,4 @@
 #include "Time.h"
-#include "PinOut.h"
 #include "Configuration.h"
 
 #include <DS3231.h>

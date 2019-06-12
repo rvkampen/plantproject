@@ -1,4 +1,4 @@
-#include "Configuration.h"
+#include "PlantConfiguration.h"
 
 // +- 630 = completely dry
 // +- 320 = completely wet

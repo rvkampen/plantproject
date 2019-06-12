@@ -48,17 +48,17 @@ void Report::printTo(String &s)
 	}
 	if (count_)
 		s.setCharAt(s.length() - 1, ' ');
-	op++; op_succes += s.concat("],plant=[");
-	for (byte i(0); i < get_plant_count(); ++i)
-	{
-		op++; op_succes += s.concat("{\"humidity\":");
-		op++; op_succes += s.concat(get_plant(i).humidity());
-		op++; op_succes += s.concat(",\"state\":");
-		op++; op_succes += s.concat(get_plant(i).get_state_update(unixtime_));
-		op++; op_succes += s.concat("},");
-	}
-	if (get_plant_count())
-		s.setCharAt(s.length() - 1, ' ');
+	//op++; op_succes += s.concat("],plant=[");
+	//for (byte i(0); i < get_plant_count(); ++i)
+	//{
+	//	op++; op_succes += s.concat("{\"humidity\":");
+	//	op++; op_succes += s.concat(get_plant(i).humidity());
+	//	op++; op_succes += s.concat(",\"state\":");
+	//	op++; op_succes += s.concat(get_plant(i).get_state_update(unixtime_));
+	//	op++; op_succes += s.concat("},");
+	//}
+	//if (get_plant_count())
+	//	s.setCharAt(s.length() - 1, ' ');
 	op++; op_succes += s.concat("]}");
 	//buf += sprintf(buf, "]}");
 	//s.setCharAt(, 0);

@@ -1,16 +1,86 @@
-memory:
-each plant (15x):
-- required_value     // minimum value to water
-- pump_time          // amount of time pump might be on
-- available          // set to false if plant is not there
-- max_hose_fill_time // time it takes to pump up trough this hose
-- state // see display part
-- time last watered
-- last value of sensor
-- (last value of second sensor)
+Goal:
+To have an interactive system that automatically waters the plants from a manually filled bucket. 
+
+Requirements:
+- Gather the temperature, humidity & air pressure of the room every minute.
+- Gather the temperature & humidity of the plants every minute.
+- Water the enabled plants once a day (around 8:00), if their humidity is less than the preset as configurable trough the website.
+- Watering should take place from multiple buckets, one main bucket should be filled, multiple slave buckets can be configured trough the website.
+- Water should be automatically distributed from main to slave bucket when needed.
+- Alert if the main bucket is empty.
+- Display browsable graphs of the temperature, humidity & air pressure measurements (room & plants) on the website.
+- Display when the plants have been watered on the website.
+- Allow a preset wanted humidity per plant trough the website.
+- Allow to enable/disable watering individual plants trough the website.
+- Automatically disable a plant in case of a leak and send an email or push alert trough the website.
+- The system should only stop operating when the buckets are empty or all enabled plants are leaking, but not when the website is unreachable.
+  (The internet connection quality can be improved here).
+
+Notes:
+- Leakage should be kept at a minimum, so if the water from the bucket is not arriving at the plant it should be marked as leaking.
+  Because the hose length will differ from between plants the allowed timeout needs to be configurable per plant.
+- Watering should take place from a main bucket because using the main water can ruin the relations with neighbours in case of failure.
+  If this differs in future applications, the system should be configurable that the 'main bucket' can be replaced by a solenoid that fills the 'slave bucket(s)'.
+- The Arduino should be able to store data temporarily in case the website is unreachable and re-post it later when its available again. 
+- The Arduino/electronics should not be affected in any way by the water, only the pumps should have contact with the water.
+- If the server is unreachable when the plants should be watered, retry every 5 minutes, after failure for more than a hour water the plants anyway.
+- The backend should allow multiple instances (to allow testing and/or different rooms).
+- The system should at intervals of a few days sync its time to an NTP server (basic NTP will break down February 7, 2036, it's ok with me if it no longer works after that date).
+
+Design:
+Arduino memory:
+hardcoded configuration:
+- system serial number       uint8,  To distinguish between setups, 0 is reserved for testing purposes.
+- website host name          string,
+- website host port          int16,  usually 80
+- ntp host name              string,
+- I2C adresses of sensors/clock
+- meaning of I/O pins
+
+general:
+- position indication x 16 *  Enum
+ 0 = nothing connected,
+ 1 = plant,
+ 2 = bucket,
+ 3 = reserved
+- last_NTP_time              uint32, Last time in seconds since epoch that the clock was synced to NTP.
+- last_server_config_time    uint32, Last time in seconds since epoch that the server configuration has been changed.
+- last_environmental_time    uint32, Last time in seconds since epoch that the environmentals have been measured.
+- watering_enabled        *  bool,   If the system is allowed to water the plants.
+- watering_starttime      *  uint17, Seconds since midnight that the watering might take place after.
+- last_water_time            uint32, Last time in seconds since epoch that the watering cycle has taken place.
+
+each plant:
+- available               *  bool,   True if a plant is connected at this spot.
+- minimum_humidity        *  uint10, Minimum humidity, when the humidity is still higher watering is not allowed.
+- max_hose_fill_time      *  uint16, Maximum amount of centiseconds that it might take to fill the hose to this plant (max ~11 minutes).
+- maximum_pump_time       *  uint16, Maximum amount of centiseconds pump might be on after max_hose_fill_time, determines maximum amount of water given in a single shot (max ~11 minutes).
+- loose                   ** bool,   If this plant has had failed filling attempts.
+- loose_comunicated          bool,   If the server has succesfully been told that this plant is leaking.
+- bucket_index            *  uint4,  Index of the bucket, so eye can be kept on bucket contents when watering.
+
+each bucket:
+- parent_bucket_index     *  int5,   The bucket to get water from when this one is empty, -1 if there is no parent or filling is disabled. 
+- max_hose_fill_time      *  uint16, Maximum amount of centiseconds that it might take to fill the hose to this bucket (max ~11 minutes).
+- maximum_pump_time       *  uint16, Maximum amount of centiseconds pump might be on after max_hose_fill_time, determines maximum amount of water transfered to this bucket in a single shot (max ~11 minutes).
+- loose                   ** bool,   If this bucket has had failed filling attempts.
+- loose_comunicated          bool,   If the server has succesfully been told that this bucket is not filling.
+- empty                   ** bool,   If this bucket has no parents and/or cannot be filled automatically, might reset automatically if full sensor senses water again.
+- empty_comunicated          bool,   If the server has succesfully been told that this bucket needs to be filled manually.
+
+*  Server dictated setting.
+** Resetable by server.
+
+DECISIONPOINTS:
+- bucket sensors, multiple resistors?, 
+  empty indication (just above pumps minumum),
+  full indication,
+  level indication?
+
 bucket:
 - last low sensor value + last change time
 - last empty sensor value + last change time
+
 general:
 - start_time
 - first_loop
@@ -61,12 +131,12 @@ loop:
 -- select x
 -- measure sensor
 -- if fillstate == ok
---- if sensor value < required_value && plant state == ok
+--- if sensor value < minimum_humidity && plant state == ok
 ---- enable pump
 ---- read hose_end_sensor
 ---- while !hose_end_sensor sleep .1 sec untill max_hose_fill_time
 ---- if still not hose_end_sensor plant state = loose
----- else wait pump_time
+---- else wait maximum_pump_time
 ---- disable pump
 ---- measure sensor
 ---- if plant level == same level - plant state = fail_sensor

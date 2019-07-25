@@ -39,3 +39,4 @@ oldwebsite/
 #dummy data
 .statemachine/
 .db/
+.vs/

@@ -1,0 +1,29 @@
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Name>website</Name>
+    <ProjectGuid>{9c1c5596-4c22-4024-a53d-52772e14127b}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <ProjectTypeGuids>{A0786B88-2ADB-4C21-ABE8-AA2D79766269}</ProjectTypeGuids>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+    <IncludeDebugInformation>true</IncludeDebugInformation>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <IncludeDebugInformation>false</IncludeDebugInformation>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="website\js\app.js" />
+    <Compile Include="website\js\Chart.min.js" />
+    <Compile Include="website\js\jquery.min.js" />
+    <Compile Include="website\js\moment.min.js" />
+    <Compile Include="website\data.php" />
+    <Compile Include="website\db_config.php" />
+    <Compile Include="website\index.php" />
+    <Compile Include="website\update.php" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="website\" />
+    <Folder Include="website\js\" />
+  </ItemGroup>
+</Project>

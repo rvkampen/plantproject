@@ -76,7 +76,8 @@ void TestSensors(int max = 16)
 
 void loop()
 {
-    TestSensors(3);
+    TestSensor(1);
+    TestSensor(15);
     //lcd_line(0, "TEST");
 	//time_update();
 	//time_debug();

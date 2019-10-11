@@ -57,7 +57,7 @@ uint16_t is_water_at_hose_end()
 
 void pin_debug()
 {
-	for (int i = 0; i < get_plant_count(); i++)
+	for (int i = 0; i < 1/*get_plant_count()*/; i++)
 	{
 		select_plant(i);
 		uint16_t humidity = humidity_sensor();
@@ -74,5 +74,7 @@ void pin_debug()
 	Serial.print(" -- bucket ");
 	Serial.print(BUCKET_SENSOR_INDEX);
 	Serial.print(" humidity ");
-	Serial.println(humidity);
+	Serial.print(humidity);
+    Serial.print(" hose end ");
+    Serial.println(is_water_at_hose_end());
 }

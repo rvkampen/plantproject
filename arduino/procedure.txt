@@ -5,8 +5,6 @@ Requirements:
 - Gather the temperature, humidity & air pressure of the room every minute.
 - Gather the temperature & humidity of the plants every minute.
 - Water the enabled plants once a day (around 8:00), if their humidity is less than the preset as configurable trough the website.
-- Watering should take place from multiple buckets, one main bucket should be filled, multiple slave buckets can be configured trough the website.
-- Water should be automatically distributed from main to slave bucket when needed.
 - Alert if the main bucket is empty.
 - Display browsable graphs of the temperature, humidity & air pressure measurements (room & plants) on the website.
 - Display when the plants have been watered on the website.
@@ -15,6 +13,8 @@ Requirements:
 - Automatically disable a plant in case of a leak and send an email or push alert trough the website.
 - The system should only stop operating when the buckets are empty or all enabled plants are leaking, but not when the website is unreachable.
   (The internet connection quality can be improved here).
+2nd Watering should take place from multiple buckets, one main bucket should be filled, multiple slave buckets can be configured trough the website.
+2nd Water should be automatically distributed from main to slave bucket when needed.
 
 Notes:
 - Leakage should be kept at a minimum, so if the water from the bucket is not arriving at the plant it should be marked as leaking.

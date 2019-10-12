@@ -31,8 +31,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Arduino Projects", "Arduino
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Arduino Libraries", "Arduino Libraries", "{2D586C7D-135B-46B0-9278-7049CCB05BCF}"
 EndProject
-Project("{A0786B88-2ADB-4C21-ABE8-AA2D79766269}") = "website", "..\website.phpproj", "{9C1C5596-4C22-4024-A53D-52772E14127B}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -59,10 +57,6 @@ Global
 		{CE431982-8543-4C42-98CD-667DE0F28E24}.Release|Any CPU.ActiveCfg = Release|Win32
 		{CE431982-8543-4C42-98CD-667DE0F28E24}.Release|x86.ActiveCfg = Release|Win32
 		{CE431982-8543-4C42-98CD-667DE0F28E24}.Release|x86.Build.0 = Release|Win32
-		{9C1C5596-4C22-4024-A53D-52772E14127B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{9C1C5596-4C22-4024-A53D-52772E14127B}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{9C1C5596-4C22-4024-A53D-52772E14127B}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{9C1C5596-4C22-4024-A53D-52772E14127B}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

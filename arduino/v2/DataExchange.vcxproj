@@ -108,11 +108,15 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Network.h" />
+    <ClInclude Include="State.h" />
+    <ClInclude Include="Time.h" />
     <ClInclude Include="__vm\.DataExchange.vsarduino.h" />
     <ClInclude Include="__vm\.v2.vsarduino.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Network.cpp" />
+    <ClCompile Include="State.cpp" />
+    <ClCompile Include="Time.cpp" />
   </ItemGroup>
   <PropertyGroup>
     <DebuggerFlavor>VisualMicroDebugger</DebuggerFlavor>

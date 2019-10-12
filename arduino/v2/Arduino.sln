@@ -7,6 +7,12 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DataExchange", "DataExchang
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ArduinoHttpClient", "C:\Users\Richard\Documents\Arduino\libraries\ArduinoHttpClient\ArduinoHttpClient.vcxitems", "{B08F7B48-476A-436B-9856-9222A0936C41}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{78F8FA90-FC30-4742-B330-3C4001E9A2C0}"
+	ProjectSection(SolutionItems) = preProject
+		..\data exchange.txt = ..\data exchange.txt
+		..\procedure.txt = ..\procedure.txt
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		C:\Users\Richard\Documents\Arduino\libraries\ArduinoHttpClient\ArduinoHttpClient.vcxitems*{b08f7b48-476a-436b-9856-9222a0936c41}*SharedItemsImports = 9

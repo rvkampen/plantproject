@@ -1,14 +1,14 @@
 #include "Network.h"
+#include "State.h"
+#include "debug.h"
 #include <Ethernet.h>
 #include <ArduinoHttpClient.h>
 
-const byte mac[] = { 0xDE, 0xAD, 0xBE, 0xEF, 0xFE, 0xEB };
-char serverAddress[] = "172.16.0.3";  // server address
-int serverPort = 8000;
+#define MAC             0XDE, 0xAD, 0xBE, 0xEF, 0xFE, 0xEB 
+#define SERVERADDRESS   ""
+#define SERVERPORT      80
 
 EthernetClient network;
-
-HttpClient client = HttpClient(network, serverAddress, serverPort);
 
 void network_init()
 {
@@ -18,131 +18,167 @@ void network_init()
 
     for (bool success = false; !success;)
     {
-        Serial.print(F("Starting ethernet..."));
+        DEBUG(F("Starting ethernet..."));
+        const byte mac[] = { MAC };
         if (!Ethernet.begin(mac)) {//, 20000UL, 40000UL))
-            Serial.println(F("failed"));
+            DEBUGLN(F("failed"));
             delay(2000);
         }
         else
         {
-            Serial.print(F(".."));
+            DEBUG(F(".."));
             delay(1000);
-            Serial.println(Ethernet.localIP());
+            DEBUGLN(Ethernet.localIP());
             success = Ethernet.localIP()[0] != 192;
         }
     }
+
+    // todo find if this helps
+    network.setTimeout(30 * 1000);
 }
-/*
-bool http_post(char* domainBuffer, int remoteport, char* page, const String& data)
-{
-	Serial.print(F("Maintain..."));
-	int eth = Ethernet.maintain();
-	Serial.println(eth);
-
-	int inChar;
-	char outBuf[64];
-	
-	Serial.print(F("Connecting..."));
-	int conresult = client.connect(domainBuffer, remoteport);
-	if (conresult == 1)
-	{
-		Serial.println(F("connected"));
-
-		// send the header
-		sprintf(outBuf, "POST %s HTTP/1.1", page);
-		client.println(outBuf);
-		sprintf(outBuf, "Host: %s", domainBuffer);
-		client.println(outBuf);
-		client.println(F("Connection: close\r\nContent-Type: application/x-www-form-urlencoded"));
-		sprintf(outBuf, "Content-Length: %u\r\n", data.length());
-		client.println(outBuf);
-
-		// send the body (variables)
-		client.print(data);
-	}
-	else
-	{
-		Serial.print(F("failed -> "));
-		Serial.println(conresult);
-		return false;
-	}
-
-	int connectLoop = 0;
-
-	while (client.connected())
-	{
-		while (client.available())
-		{
-			inChar = client.read();
-			Serial.write(inChar);
-			connectLoop = 0;
-		}
-
-		delay(1);
-		connectLoop++;
-		if (connectLoop > 10000)
-		{
-			Serial.println();
-			Serial.println(F("Timeout"));
-			client.stop();
-		}
-	}
-
-	Serial.println();
-	Serial.println(F("disconnecting."));
-	client.stop();
-	return true;
-}
-*/
 
 bool download_config()
 {
-    Serial.println("GETing config");
+    DEBUGLN(F("GETing config"));
+    HttpClient client = HttpClient(network, SERVERADDRESS, SERVERPORT);
+
+    // todo find if this helps
+    client.setTimeout(30 * 1000);
 
     client.beginRequest();
-    client.get("/api/settings/2");
+    if (client.get("/api/settings/" SETUP_ID) != HTTP_SUCCESS)
+    {
+        DEBUGLN(F("Failed to connect"));
+        client.stop();
+        return false;
+    }
+    //client.sendHeader("Host", "iot-monitor.bezooijen.net");
     client.sendHeader("Accept", "text/plain");
     client.sendHeader("Cache-Control", "no-cache");
     client.sendHeader("Accept-Encoding", "none");
-    client.beginBody();
+    client.sendHeader("Connection", "Close");
     client.endRequest();
+    DEBUGLN(F("Request send"));
 
-    // read the status code and body of the response
     int statusCode = client.responseStatusCode();
-    String response = client.responseBody();
+    DEBUG(F("Status code: "));
+    DEBUGLN(statusCode);
+
+    if (statusCode != 200)
+    {
+        DEBUG(F("remaining response: "));
+        DEBUGLN(client.responseBody());
+        client.stop();
+        return false;
+    }
+
+    State.StartUpdate();
+
+    //DEBUGLN(F("Headers: "));
+    while (client.headerAvailable())
+    {
+        String headerName = client.readHeaderName();
+        String headerValue = client.readHeaderValue();
+        //DEBUGLN(headerName + ": " + headerValue);
+        if (headerName == "ts")
+            State.ProcessTimestamp(strtoul(headerValue.c_str(), NULL, 16));
+    }
+
+    //DEBUG(F("Content Length: "));
+    //DEBUGLN(client.contentLength());
+
+    int thing;
+    do
+    {
+        thing = client.read();
+        bool plant = thing == 'P';
+        bool bucket = thing == 'B';
+        if (plant || bucket)
+        {
+            char buff[23];
+            int wantedlen = bucket ? 8 : 23;
+            int len = client.readBytes(&buff[0], wantedlen);
+            if (wantedlen != len)
+            {
+                DEBUG(F("Failed to read "));
+                DEBUG((char)thing);
+                DEBUG(": ");
+                Serial.write(&buff[0], len);
+                DEBUGLN();
+                DEBUG(F("remaining response: "));
+                DEBUGLN(client.responseBody());
+
+                State.Cancel();
+                client.stop();
+                return false;
+            }
+
+            long id = strtol(&buff[1], NULL, 16);
+            long lowlevel = strtol(&buff[4], NULL, 16);
+
+            if (bucket)
+            {
+                State.ProcessBucket(id, lowlevel);
+            }
+            else
+            {
+                bool enabled = buff[9] == '1';
+                long bucketid = strtol(&buff[11], NULL, 16);
+                long pumptime = strtol(&buff[14], NULL, 16);
+                long filltime = strtol(&buff[19], NULL, 16);
+
+                State.ProcessPlant(id, lowlevel, enabled, bucketid, pumptime, filltime);
+            }
+        }
+        else if (thing != '\r' && thing != '\n' && thing != ' ' && thing != -1)
+        {
+            DEBUG(F("Failed to parse "));
+            DEBUGLN((char)thing);
+            DEBUG(F("remaining response: "));
+            DEBUGLN(client.responseBody());
+
+            State.Cancel();
+            client.stop();
+            return false;
+        }
+    } while (thing != -1);
+
+    State.Confirm();
     client.stop();
-
-    Serial.print("Status code: ");
-    Serial.println(statusCode);
-    Serial.print("Response: ");
-    Serial.println(response);
-
-    Serial.println("Wait");
-    delay(1000);
-
-    return false;
+    return true;
 }
 
 bool upload_status()
 {
-    Serial.println("POSTing status");
-    String postData = "name=Alice&age=12";
+    HttpClient client = HttpClient(network, SERVERADDRESS, SERVERPORT);
+    DEBUGLN(F("POSTing status"));
+
+    int bucket = 0;
+    int plant = 0;
+    for (const item & i : State.Items)
+    {
+        bucket += i.isBucket;
+        plant += i.isPlant;
+    }
+    int datalength = 12 + (SENSOR_COUNT * 15) + (bucket * 16) + (plant * 25);
+
 
     client.beginRequest();
     client.post("/");
     client.sendHeader("Content-Type", "application/x-www-form-urlencoded");
-    client.sendHeader("Content-Length", postData.length());
+    client.sendHeader("Content-Length", datalength);
     client.sendHeader("X-Custom-Header", "custom-header-value");
     client.beginBody();
-    client.print(postData);
+    client.print(SETUP_ID);
     client.endRequest();
 
     // read the status code and body of the response
     int statusCode = client.responseStatusCode();
-    String response = client.responseBody();
 
-    Serial.print("Status code: ");
-    Serial.println(statusCode);
-    Serial.print("Response: ");
-    Serial.println(response);
+    DEBUG(F("Status code: "));
+    DEBUGLN(statusCode);
+    DEBUG(F("Response: "));
+    DEBUGLN(client.responseBody());
+
+    return statusCode == 200;
 }

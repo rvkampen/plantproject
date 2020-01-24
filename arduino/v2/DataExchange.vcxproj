@@ -107,6 +107,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="debug.h" />
     <ClInclude Include="Network.h" />
     <ClInclude Include="State.h" />
     <ClInclude Include="Time.h" />

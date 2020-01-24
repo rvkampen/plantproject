@@ -1,17 +1,18 @@
 #include "Time.h"
 #include "State.h"
 #include "Network.h"
+#include "debug.h"
 
 void setup()
 {
-    Serial.begin(115200);
-    Serial.println(F("Starting..."));
+    init_debug();
     network_init();
-    Serial.println(F("Startup done!"));
+    DEBUGLN(F("Startup done!"));
 }
 
 void loop()
 {
     download_config();
 
+    DEBUGLN(millis());
 }

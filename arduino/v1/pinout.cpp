@@ -13,7 +13,7 @@ void pin_init()
 	pinMode(SELECT_PIN1, OUTPUT);
 	pinMode(SELECT_PIN2, OUTPUT);
 	pinMode(SELECT_PIN3, OUTPUT);
-	pinMode(SELECT_DISABLE_PIN, OUTPUT);
+	pinMode(SENSOR_POWER_PIN, OUTPUT);
 	pinMode(PUMP_PIN, OUTPUT);
 
 	digitalWrite(PIEZO_PIN, LOW);
@@ -21,18 +21,18 @@ void pin_init()
 	digitalWrite(SELECT_PIN1, LOW);
 	digitalWrite(SELECT_PIN2, LOW);
 	digitalWrite(SELECT_PIN3, LOW);
-	digitalWrite(SELECT_DISABLE_PIN, HIGH); // high is disabled
+	digitalWrite(SENSOR_POWER_PIN, LOW); // high is disabled
     disable_pump();
 }
 
 void select_plant(byte plant)
 {
-	digitalWrite(SELECT_DISABLE_PIN, HIGH);
+	digitalWrite(SENSOR_POWER_PIN, LOW);
 	digitalWrite(SELECT_PIN0, plant & 0x01);
 	digitalWrite(SELECT_PIN1, plant & 0x02);
 	digitalWrite(SELECT_PIN2, plant & 0x04);
 	digitalWrite(SELECT_PIN3, plant & 0x08);
-	digitalWrite(SELECT_DISABLE_PIN, LOW);
+	digitalWrite(SENSOR_POWER_PIN, HIGH);
 }
 
 uint16_t humidity_sensor()
@@ -53,28 +53,4 @@ void disable_pump()
 uint16_t is_water_at_hose_end()
 {
 	return analogRead(SENSOR_HOSE_END_PIN) ;
-}
-
-void pin_debug()
-{
-	for (int i = 0; i < 1/*get_plant_count()*/; i++)
-	{
-		select_plant(i);
-		uint16_t humidity = humidity_sensor();
-		Serial.print(" -- Plant ");
-		Serial.print(i);
-		Serial.print(" humidity ");
-		Serial.print(humidity);
-		Serial.print(" hose end ");
-		Serial.println(is_water_at_hose_end());
-	}
-
-	select_plant(BUCKET_SENSOR_INDEX);
-    uint16_t humidity = humidity_sensor();
-	Serial.print(" -- bucket ");
-	Serial.print(BUCKET_SENSOR_INDEX);
-	Serial.print(" humidity ");
-	Serial.print(humidity);
-    Serial.print(" hose end ");
-    Serial.println(is_water_at_hose_end());
 }

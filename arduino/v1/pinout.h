@@ -17,7 +17,7 @@ constexpr auto SELECT_PIN2 = 4;
 constexpr auto SELECT_PIN3 = 5;
 constexpr auto PUMP_PIN = 6;
 constexpr auto PIEZO_PIN = 7;
-constexpr auto SELECT_DISABLE_PIN = 8;
+constexpr auto SENSOR_POWER_PIN = 8;
 // 10 - 13 are used by SPI (sd & network)
 
 void pin_init();
@@ -28,5 +28,3 @@ uint16_t humidity_sensor();
 void enable_pump();
 void disable_pump();
 uint16_t is_water_at_hose_end();
-
-void pin_debug();

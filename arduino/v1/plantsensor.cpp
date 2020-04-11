@@ -52,13 +52,13 @@ void plantsensor_print()
     for (int i = 0; i < sensor_count_; ++i)
     {
         Serial.print(F("   Temperature "));
-        for (auto && c : sensors_[i].address)
-        {
-            Serial.print(c, HEX);
-        }
-        Serial.print(F(" - "));
+        //for (auto && c : sensors_[i].address)
+        //{
+        //    Serial.print(c, HEX);
+        //}
+        //Serial.print(F(" - "));
         Serial.print(plantsensor_formatted(i));
-        Serial.println(F(" C"));
+        Serial.print(F(" C"));
     }
 }
 

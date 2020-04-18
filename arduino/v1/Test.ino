@@ -159,6 +159,7 @@ void loop()
     TestSensor(0);
     TestSensor(15);
     TestPump(0);
+    select_plant(-1); // to turn off all sensors
     delay(10000);
 
 	//time_update();

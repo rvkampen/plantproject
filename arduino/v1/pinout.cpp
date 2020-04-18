@@ -28,6 +28,8 @@ void pin_init()
 void select_plant(byte plant)
 {
 	digitalWrite(SENSOR_POWER_PIN, LOW);
+    if (plant > 16)
+        return;
 	digitalWrite(SELECT_PIN0, plant & 0x01);
 	digitalWrite(SELECT_PIN1, plant & 0x02);
 	digitalWrite(SELECT_PIN2, plant & 0x04);

@@ -1,10 +1,6 @@
 #pragma once
 
-#define SETUP_ID "2"               // Number of this setup on the website
-#define SENSOR_COUNT 5             // Room sensor number
-#define ITEM_COUNT 16              // Plant or bucket
-#define WATERWINDOW_START 8 * 3600 // Start time watering is allowed
-#define WATERWINDOW_END   9 * 3600 // End time watering is allowed
+#include "config.h"
 
 #include <stdint.h>
 
@@ -48,14 +44,13 @@ struct state
 
     void StartUpdate();
 
-    void ProcessTimestamp(uint32_t ts);
+    void ProcessTimestamp(uint32_t timestap_epoch);
 
     void ProcessBucket(long id, long lowlevel);
 
     void ProcessPlant(long id, long lowlevel, bool enabled, long bucketid, long pumptime, long filltime);
 
-    void Cancel() {
-    }
+    void Cancel() { }
 
     void Confirm();
 };

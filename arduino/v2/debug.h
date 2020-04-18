@@ -1,6 +1,6 @@
 #pragma once
 
-#define DEBUG_WANTED
+#include "config.h"
 
 #ifdef DEBUG_WANTED
 #include <HardwareSerial.h>

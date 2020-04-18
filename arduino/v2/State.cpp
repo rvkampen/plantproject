@@ -78,7 +78,7 @@ void state::Confirm()
             Items[i].isBucket = false;
             Items[i].isPlant = false;
             Items[i].isEnabled = false;
-            DEBUG(F("Disableing item "));
+            DEBUG(F("Disabling item "));
             DEBUGLN(i);
         }
     }

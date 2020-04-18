@@ -1,12 +1,9 @@
 #include "Network.h"
 #include "State.h"
 #include "debug.h"
+#include "config.h"
 #include <Ethernet.h>
 #include <ArduinoHttpClient.h>
-
-#define MAC             0XDE, 0xAD, 0xBE, 0xEF, 0xFE, 0xEB 
-#define SERVERADDRESS   ""
-#define SERVERPORT      80
 
 EthernetClient network;
 

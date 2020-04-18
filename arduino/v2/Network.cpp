@@ -13,6 +13,7 @@ void network_init()
 	pinMode(4, OUTPUT);
 	digitalWrite(4, HIGH);
 
+    // initialize network
     for (bool success = false; !success;)
     {
         DEBUG(F("Starting ethernet..."));
@@ -159,14 +160,28 @@ bool upload_status()
     }
     int datalength = 12 + (SENSOR_COUNT * 15) + (bucket * 16) + (plant * 25);
 
-
     client.beginRequest();
-    client.post("/");
-    client.sendHeader("Content-Type", "application/x-www-form-urlencoded");
-    client.sendHeader("Content-Length", datalength);
-    client.sendHeader("X-Custom-Header", "custom-header-value");
+    if (client.post("/api/status/" SETUP_ID) != HTTP_SUCCESS)
+    {
+        DEBUGLN(F("Failed to connect"));
+        client.stop();
+        return false;
+    }
+    
+    client.sendHeader("Content-Type", "multipart/form-data; boundary=BOUND");
+    //client.sendHeader("Content-Type", "application/x-www-form-urlencoded");
+    //client.sendHeader("Content-Length", datalength);
+    //client.sendHeader("X-Custom-Header", "custom-header-value");
     client.beginBody();
+
+    client.println("--BOUND");
+    client.println("Content-Disposition: form-data; name=\"update\"");
+    client.println();
+
     client.print(SETUP_ID);
+    client.print(' ');
+    client.println(getTime(), 16);
+    client.println("--BOUND--");
     client.endRequest();
 
     // read the status code and body of the response

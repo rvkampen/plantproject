@@ -2,6 +2,6 @@
 
 #include <stdint.h>
 
-void setTime(int32_t timestamp);
-int32_t getTime();
+void setTime(uint32_t timestamp);
+uint32_t getTime();
 bool isWaterWindow();

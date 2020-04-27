@@ -1,15 +1,24 @@
 #include "Time.h"
+#include "config.h"
+#include <Arduino.h>
 
-void setTime(int32_t timestamp)
+uint32_t last_time = 0;
+uint16_t last_millis = 0;
+
+void setTime(uint32_t timestamp)
 {
+    last_millis = millis();
+    last_time = timestamp;
 }
 
-int32_t getTime()
+uint32_t getTime()
 {
-    return int32_t();
+    uint16_t delay = millis() - last_millis;
+    return last_time + (delay/1000);
 }
 
 bool isWaterWindow()
 {
-    return false;
+    uint32_t daytime = getTime() % (24 * 60 * 60);
+    return daytime > WATERWINDOW_START && daytime < WATERWINDOW_END;
 }

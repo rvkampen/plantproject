@@ -13,6 +13,7 @@ void setup()
 void loop()
 {
     download_config();
+    upload_status();
 
     DEBUGLN(millis());
 }

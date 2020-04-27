@@ -2,6 +2,7 @@
 #include "State.h"
 #include "debug.h"
 #include "config.h"
+#include "Time.h"
 #include <Ethernet.h>
 #include <ArduinoHttpClient.h>
 
@@ -50,7 +51,7 @@ bool download_config()
         client.stop();
         return false;
     }
-    //client.sendHeader("Host", "iot-monitor.bezooijen.net");
+    //client.sendHeader("Host", SERVERADDRESS);
     client.sendHeader("Accept", "text/plain");
     client.sendHeader("Cache-Control", "no-cache");
     client.sendHeader("Accept-Encoding", "none");
@@ -151,14 +152,14 @@ bool upload_status()
     HttpClient client = HttpClient(network, SERVERADDRESS, SERVERPORT);
     DEBUGLN(F("POSTing status"));
 
-    int bucket = 0;
-    int plant = 0;
-    for (const item & i : State.Items)
-    {
-        bucket += i.isBucket;
-        plant += i.isPlant;
-    }
-    int datalength = 12 + (SENSOR_COUNT * 15) + (bucket * 16) + (plant * 25);
+    //uint8_t bucket = 0;
+    //uint8_t plant = 0;
+    //for (const item & i : State.Items)
+    //{
+    //    bucket += i.isBucket;
+    //    plant += i.isPlant;
+    //}
+    //int datalength = 12 + (SENSOR_COUNT * 15) + (bucket * 16) + (plant * 25);
 
     client.beginRequest();
     if (client.post("/api/status/" SETUP_ID) != HTTP_SUCCESS)
@@ -181,6 +182,43 @@ bool upload_status()
     client.print(SETUP_ID);
     client.print(' ');
     client.println(getTime(), 16);
+
+    for (int i = 0; i < SENSOR_COUNT; i++)
+    {
+        client.print("s ");
+        client.print(i, 16);
+        client.print(' ');
+        client.println(State.Sensors[i].value, 16);
+    }
+
+    for (int i = 0; i < ITEM_COUNT; i++)
+    {
+        const item & item = State.Items[i];
+        if (item.isBucket)
+            client.print('b');
+        else if (item.isPlant)
+            client.print('p');
+        else
+            continue;
+
+        client.print(' ');
+        client.print(i, 16);
+        client.print(' ');
+        client.print(item.actualWaterLevel, 16);
+        client.print(' ');
+        client.print(item.actualTemperature, 16);
+
+        if (item.isPlant) 
+        {
+            client.print(' ');
+            client.print(item.looseWarning);
+            client.print(' ');
+            client.print(item.wateredInLastGo);
+            client.print(' ');
+            client.print(item.actualPumpTime);
+        }
+        client.println();
+    }
     client.println("--BOUND--");
     client.endRequest();
 

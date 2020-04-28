@@ -67,9 +67,9 @@ bool download_config()
     if (statusCode != 200)
     {
         if (statusCode > 0) 
-    {
-        DEBUG(F("remaining response: "));
-        DEBUGLN(client.responseBody());
+        {
+            DEBUG(F("remaining response: "));
+            DEBUGLN(client.responseBody());
         }
         client.stop();
         return false;
@@ -94,8 +94,8 @@ bool download_config()
     do
     {
         thing = client.read();
-        bool plant = thing == 'P';
-        bool bucket = thing == 'B';
+        bool plant = thing == 'p';
+        bool bucket = thing == 'b';
         if (plant || bucket)
         {
             char buff[23];
@@ -234,8 +234,8 @@ bool upload_status()
     DEBUGLN(statusCode);
     if (statusCode > 0)
     {
-    DEBUG(F("Response: "));
-    DEBUGLN(client.responseBody());
+        DEBUG(F("Response: "));
+        DEBUGLN(client.responseBody());
     }
     client.stop();
     return statusCode == 200;

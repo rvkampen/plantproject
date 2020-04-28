@@ -38,6 +38,7 @@ void network_init()
 
 bool download_config()
 {
+    DEBUG_TRACKTIME
     DEBUGLN(F("GETing config"));
     HttpClient client = HttpClient(network, SERVERADDRESS, SERVERPORT);
 
@@ -149,6 +150,7 @@ bool download_config()
 
 bool upload_status()
 {
+    DEBUG_TRACKTIME
     HttpClient client = HttpClient(network, SERVERADDRESS, SERVERPORT);
     DEBUGLN(F("POSTing status"));
 

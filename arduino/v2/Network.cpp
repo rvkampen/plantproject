@@ -66,8 +66,11 @@ bool download_config()
 
     if (statusCode != 200)
     {
+        if (statusCode > 0) 
+    {
         DEBUG(F("remaining response: "));
         DEBUGLN(client.responseBody());
+        }
         client.stop();
         return false;
     }
@@ -229,8 +232,11 @@ bool upload_status()
 
     DEBUG(F("Status code: "));
     DEBUGLN(statusCode);
+    if (statusCode > 0)
+    {
     DEBUG(F("Response: "));
     DEBUGLN(client.responseBody());
-
+    }
+    client.stop();
     return statusCode == 200;
 }

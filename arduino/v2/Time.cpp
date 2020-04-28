@@ -13,8 +13,16 @@ void setTime(uint32_t timestamp)
 
 uint32_t getTime()
 {
-    uint16_t delay = millis() - last_millis;
-    return last_time + (delay/1000);
+    uint16_t actual = millis();
+    uint16_t delay = actual - last_millis;
+    uint32_t time = last_time + (delay / 1000);
+    if (actual < last_millis)
+    {
+        //overflow, so update to get the right time next time as well
+        last_millis = actual;
+        last_time = time;
+    }
+    return time;
 }
 
 bool isWaterWindow()
